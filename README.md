@@ -27,3 +27,14 @@ Web application, which manages a local marketplace for handmade and artisan prod
 | `DELETE` | /api/users/{id} | Delete user (admin)                              |
 
 ***
+
+### Query Parameters for GET /vendors
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| type | string | Filter by product type |
+| location | string | Filter by city / region |
+| min_price | int | Min price |
+| max_price | int | Max price |
+| page | int | Page number (default: 0) |
+| size | int | Page size (default: 20) |
