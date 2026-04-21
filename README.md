@@ -28,6 +28,28 @@ Web application, which manages a local marketplace for handmade and artisan prod
 
 ***
 
+### Products
+
+| Method   | Endpoint           | Action               |
+| -------- | :----------------: | :-----------------   |
+| `GET`    | /api/products      | Get all products     |
+| `GET`    | /api/products/{id} | Get product by ID    |
+| `POST`   | /api/products      | Create a new product |
+| `PUT`    | /api/products/{id} | Update a product     |
+| `DELETE` | /api/products/{id} | Delete a product     |
+
+#### Query Parameters for GET /api/products
+
+| Parameter  | Type    | Description                           | Example          |
+|------------|---------|---------------------------------------|------------------|
+| `type`     | String  | Filter products by product type       | type=JEWELRY     |
+| `minPrice` | Number  | Minimum price filter                  | minPrice=10      |
+| `maxPrice` | Number  | Maximum price filter                  | maxPrice=100     |
+| `location` | String  | Filter products by artisan location   | location=Plovdiv |
+| `search`   | String  | Search by product name or description | search=ring      |
+
+***
+
 ### Query Parameters for GET /vendors
 
 | Parameter | Type | Description |
