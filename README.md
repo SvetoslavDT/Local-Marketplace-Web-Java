@@ -109,3 +109,16 @@ Web application, which manages a local marketplace for handmade and artisan prod
 | `POST` | /api/payments/{id}/refund      | Issue refund (vendor or admin) |
 
 ***
+
+### Reviews
+
+| Method   | Endpoint                                  | Action                          |
+| -------- |:-----------------------------------------:| :-------------------------------|
+| `GET`    | /api/products/{productId}/reviews         | Get reviews for product         |
+| `GET`    | /api/products/{productId}/reviews/summary | Get aggregated product rating   |
+| `POST`   | /api/products/{productId}/reviews         | Submit product review           |
+| `PUT`    | /api/reviews/{id}                         | Update own review               |
+| `DELETE` | /api/reviews/{id}                         | Delete review (author or admin) |
+| `GET`    | /api/vendors/{vendorId}/reviews           | Get reviews for vendor          |
+| `GET`    | /api/vendors/{vendorId}/reviews/summary   | Get aggregated vendor rating    |
+| `POST`   | /api/vendors/{vendorId}/reviews           | Submit vendor review            |
