@@ -156,3 +156,9 @@ Web application, which manages a local marketplace for handmade and artisan prod
 | `POST`   | /api/vendors/{vendorId}/stories | Add story (vendor)             |
 | `PUT`    | /api/stories/{id}               | Update story (vendor)          |
 | `DELETE` | /api/stories/{id}               | Delete story (vendor or admin) |
+
+***
+
+## Structured DB
+
+<img width="1024" height="1536" alt="schema" src="https://github.com/user-attachments/assets/fe9c87b9-4a1f-4694-8ca5-13c807bd2f05" />
