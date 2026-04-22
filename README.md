@@ -122,3 +122,39 @@ Web application, which manages a local marketplace for handmade and artisan prod
 | `GET`    | /api/vendors/{vendorId}/reviews           | Get reviews for vendor          |
 | `GET`    | /api/vendors/{vendorId}/reviews/summary   | Get aggregated vendor rating    |
 | `POST`   | /api/vendors/{vendorId}/reviews           | Submit vendor review            |
+
+### Craft Fairs
+
+| Method   | Endpoint                                 | Action                     |
+| -------- |:----------------------------------------:| :--------------------------|
+| `GET`    | /api/craft-fairs                         | Get all craft fairs        |
+| `GET`    | /api/craft-fairs/{id}                    | Get a craft fair by ID     |
+| `POST`   | /api/craft-fairs                         | Create craft fair (admin)  |
+| `PUT`    | /api/craft-fairs/{id}                    | Update craft fair (admin)  |
+| `DELETE` | /api/craft-fairs/{id}                    | Cancel craft fair (admin)  |
+| `GET`    | /api/craft-fairs/{id}/vendors            | List participating vendors |
+| `POST`   | /api/craft-fairs/{id}/vendors            | Vendor joins craft fair    |
+| `DELETE` | /api/craft-fairs/{id}/vendors/{vendorId} | Vendor leaves craft fair   |
+
+***
+
+### Promotions
+
+| Method   | Endpoint                           | Action                          |
+| -------- |:----------------------------------:| :-------------------------------|
+| `GET`    | /api/promotions                    | Get all active promotions       |
+| `GET`    | /api/promotions/{id}               | Get a promotion by ID           |
+| `POST`   | /api/vendors/{vendorId}/promotions | Create promotion (vendor)       |
+| `PUT`    | /api/promotions/{id}               | Update promotion (vendor)       |
+| `DELETE` | /api/promotions/{id}               | End promotion (vendor or admin) |
+
+***
+
+### Stories
+
+| Method   | Endpoint                        | Action                         |
+| -------- |:-------------------------------:| :------------------------------|
+| `GET`    | /api/vendors/{vendorId}/stories | Get stories by vendor          |
+| `POST`   | /api/vendors/{vendorId}/stories | Add story (vendor)             |
+| `PUT`    | /api/stories/{id}               | Update story (vendor)          |
+| `DELETE` | /api/stories/{id}               | Delete story (vendor or admin) |
