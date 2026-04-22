@@ -16,8 +16,6 @@ public class Product {
     private int count;
     private String location;
 
-    private Double rating;
-
     public Product(ProductType productType, String description, double price, int count, String location) {
         this.id = idCounter.getAndIncrement();
         this.productType = productType;
@@ -67,17 +65,17 @@ public class Product {
         this.count--;
     }
 
-    public double getRating() {
-        return rating;
-    }
-
-    public void setRating(float rating) {
-        if (this.rating == null) {
-            this.rating = (double) rating;
-        } else {
-            this.rating = (this.rating + (double) rating) / 2;
-        }
-    }
+//    public double getRating() {
+//        return rating;
+//    }
+//
+//    public void setRating(float rating) {
+//        if (this.rating == null) {
+//            this.rating = (double) rating;
+//        } else {
+//            this.rating = (this.rating + (double) rating) / 2;
+//        }
+//    }
 
     public String getLocation() {
         return location;

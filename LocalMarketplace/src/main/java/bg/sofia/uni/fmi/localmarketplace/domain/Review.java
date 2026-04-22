@@ -9,15 +9,15 @@ public class Review {
 
     private final long id;
     private String text;
-
-    // Hibernate
+    private double rating;
 
     private final long reviewerId;
     private final long productId;
 
-    public Review(String text, long reviewerId, long productId) {
+    public Review(String text, long reviewerId, long productId, double rating) {
         this.id = idCounter.getAndIncrement();
         this.text = text;
+        this.rating = rating;
         this.reviewerId = reviewerId;
         this.productId = productId;
     }
