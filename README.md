@@ -62,7 +62,6 @@ Web application, which manages a local marketplace for handmade and artisan prod
 | `GET`    | /api/vendors/{vendorId}/products | Get all products by vendor       |
 | `POST`   | /api/products                    | Create a new product             |
 | `PUT`    | /api/products/{id}               | Update a product                 |
-| `PATCH`  | /api/products/{id}/status        | Change product status            |
 | `DELETE` | /api/products/{id}               | Delete a product                 |
 
 #### Query Parameters for GET /api/products
@@ -121,6 +120,5 @@ Web application, which manages a local marketplace for handmade and artisan prod
 | `POST` | /api/orders/{orderId}/payments | Initiate payment for order     |
 | `GET`  | /api/payments/{id}             | Get payment details            |
 | `POST` | /api/payments/{id}/refund      | Issue refund (vendor or admin) |
-| `POST` | /api/payments/webhook          | Payment provider webhook       |
 
 ***
