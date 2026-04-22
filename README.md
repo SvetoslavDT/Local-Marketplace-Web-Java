@@ -36,20 +36,7 @@ Web application, which manages a local marketplace for handmade and artisan prod
 | `GET`    | /api/vendors/{id}        | Get a vendor by ID                |
 | `POST`   | /api/vendors             | Create vendor profile             |
 | `PUT`    | /api/vendors/{id}        | Update vendor (owner or admin)    |
-| `PATCH`  | /api/vendors/{id}/status | Approve or suspend vendor (admin) |
 | `DELETE` | /api/vendors/{id}        | Delete vendor (owner or admin)    |
-
-***
-
-### Categories
-
-| Method   | Endpoint             | Action                  |
-| -------- |:--------------------:| :------------------------|
-| `GET`    | /api/categories      | Get all categories      |
-| `GET`    | /api/categories/{id} | Get a category by ID    |
-| `POST`   | /api/categories      | Create category (admin) |
-| `PUT`    | /api/categories/{id} | Update category (admin) |
-| `DELETE` | /api/categories/{id} | Delete category (admin) |
 
 ***
 
@@ -69,6 +56,7 @@ Web application, which manages a local marketplace for handmade and artisan prod
 | Parameter  | Type    | Description                           | Example          |
 |------------|---------|---------------------------------------|------------------|
 | `type`     | String  | Filter products by product type       | type=JEWELRY     |
+| `category` | String  | Filter products by category           | category=handMade|
 | `minPrice` | Number  | Minimum price filter                  | minPrice=10      |
 | `maxPrice` | Number  | Maximum price filter                  | maxPrice=100     |
 | `location` | String  | Filter products by artisan location   | location=Plovdiv |
@@ -83,7 +71,6 @@ Web application, which manages a local marketplace for handmade and artisan prod
 | `GET`   | /api/products/{id}/inventory                | Get stock level for product   |
 | `PATCH` | /api/products/{id}/inventory                | Adjust stock (vendor)         |
 | `GET`   | /api/vendors/{vendorId}/inventory           | Inventory overview for vendor |
-| `GET`   | /api/vendors/{vendorId}/inventory/low-stock | Items below stock threshold   |
 
 ***
 
@@ -91,11 +78,11 @@ Web application, which manages a local marketplace for handmade and artisan prod
 
 | Method   | Endpoint             | Action                  |
 | -------- |:--------------------:| :------------------------|
-| `GET`    | /api/cart            | Get current user's cart |
-| `POST`   | /api/cart/items      | Add item to cart        |
-| `PUT`    | /api/cart/items/{id} | Update item quantity    |
-| `DELETE` | /api/cart/items/{id} | Remove item from cart   |
-| `DELETE` | /api/cart            | Clear cart              |
+| `GET`    | /api/users/me/cart            | Get current user's cart |
+| `POST`   | /api/users/me/cart/items      | Add item to cart        |
+| `PUT`    | /api/users/me/cart/items/{id} | Update item quantity    |
+| `DELETE` | /api/users/me/cart/items/{id} | Remove item from cart   |
+| `DELETE` | /api/users/me/cart            | Clear cart              |
 
 ***
 
