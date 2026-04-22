@@ -10,14 +10,16 @@ public class User {
     private String name;
     private String password;
     private String email;
+    private boolean active;
     private final long id;
 
-    // Without lists of purchases and posted offers. They may contain ids of "owners"
+    // Without lists of purchases and posted offers. They may contain ids of "owners" ( I think not )
 
     public User(String name, String password, String email) {
         this.name = name;
         this.password = password;
         this.email = email;
+        this.active = false;
         this.id = idCounter.getAndIncrement();
     }
 
@@ -43,6 +45,14 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 
     public long getId() {

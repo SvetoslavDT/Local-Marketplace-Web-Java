@@ -9,6 +9,9 @@ public class Review {
 
     private final long id;
     private String text;
+
+    // Hibernate
+
     private final long reviewerId;
     private final long productId;
 
