@@ -28,15 +28,42 @@ Web application, which manages a local marketplace for handmade and artisan prod
 
 ***
 
+### Vendors
+
+| Method   | Endpoint                 | Action                            |
+| -------- |:------------------------:| :----------------------------------|
+| `GET`    | /api/vendors             | Get all vendors                   |
+| `GET`    | /api/vendors/{id}        | Get a vendor by ID                |
+| `POST`   | /api/vendors             | Create vendor profile             |
+| `PUT`    | /api/vendors/{id}        | Update vendor (owner or admin)    |
+| `PATCH`  | /api/vendors/{id}/status | Approve or suspend vendor (admin) |
+| `DELETE` | /api/vendors/{id}        | Delete vendor (owner or admin)    |
+
+***
+
+### Categories
+
+| Method   | Endpoint             | Action                  |
+| -------- |:--------------------:| :------------------------|
+| `GET`    | /api/categories      | Get all categories      |
+| `GET`    | /api/categories/{id} | Get a category by ID    |
+| `POST`   | /api/categories      | Create category (admin) |
+| `PUT`    | /api/categories/{id} | Update category (admin) |
+| `DELETE` | /api/categories/{id} | Delete category (admin) |
+
+***
+
 ### Products
 
-| Method   | Endpoint           | Action               |
-| -------- | :----------------: | :-----------------   |
-| `GET`    | /api/products      | Get all products     |
-| `GET`    | /api/products/{id} | Get product by ID    |
-| `POST`   | /api/products      | Create a new product |
-| `PUT`    | /api/products/{id} | Update a product     |
-| `DELETE` | /api/products/{id} | Delete a product     |
+| Method   | Endpoint                         | Action                           |
+| -------- | :------------------------------: | :--------------------------------|
+| `GET`    | /api/products                    | Get all products                 |
+| `GET`    | /api/products/{id}               | Get product by ID                |
+| `GET`    | /api/vendors/{vendorId}/products | Get all products by vendor       |
+| `POST`   | /api/products                    | Create a new product             |
+| `PUT`    | /api/products/{id}               | Update a product                 |
+| `PATCH`  | /api/products/{id}/status        | Change product status            |
+| `DELETE` | /api/products/{id}               | Delete a product                 |
 
 #### Query Parameters for GET /api/products
 
@@ -50,13 +77,50 @@ Web application, which manages a local marketplace for handmade and artisan prod
 
 ***
 
-### Query Parameters for GET /vendors
+### Inventory
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| type | string | Filter by product type |
-| location | string | Filter by city / region |
-| min_price | int | Min price |
-| max_price | int | Max price |
-| page | int | Page number (default: 0) |
-| size | int | Page size (default: 20) |
+| Method  | Endpoint                                    | Action                        |
+| ------- |:-------------------------------------------:| :-----------------------------|
+| `GET`   | /api/products/{id}/inventory                | Get stock level for product   |
+| `PATCH` | /api/products/{id}/inventory                | Adjust stock (vendor)         |
+| `GET`   | /api/vendors/{vendorId}/inventory           | Inventory overview for vendor |
+| `GET`   | /api/vendors/{vendorId}/inventory/low-stock | Items below stock threshold   |
+
+***
+
+### Cart
+
+| Method   | Endpoint             | Action                  |
+| -------- |:--------------------:| :------------------------|
+| `GET`    | /api/cart            | Get current user's cart |
+| `POST`   | /api/cart/items      | Add item to cart        |
+| `PUT`    | /api/cart/items/{id} | Update item quantity    |
+| `DELETE` | /api/cart/items/{id} | Remove item from cart   |
+| `DELETE` | /api/cart            | Clear cart              |
+
+***
+
+### Orders
+
+| Method   | Endpoint                       | Action                             |
+| -------- |:------------------------------:| :----------------------------------|
+| `GET`    | /api/orders                    | Get all orders (admin)             |
+| `GET`    | /api/orders/{id}               | Get an order by ID                 |
+| `POST`   | /api/orders                    | Place order from cart              |
+| `PATCH`  | /api/orders/{id}/status        | Update order status (vendor/admin) |
+| `PATCH`  | /api/orders/{id}/cancel        | Cancel order (customer or vendor)  |
+| `GET`    | /api/users/me/orders           | Get my orders (customer)           |
+| `GET`    | /api/vendors/{vendorId}/orders | Get orders for vendor              |
+
+***
+
+### Payments
+
+| Method | Endpoint                       | Action                         |
+| ------ |:------------------------------:| :------------------------------|
+| `POST` | /api/orders/{orderId}/payments | Initiate payment for order     |
+| `GET`  | /api/payments/{id}             | Get payment details            |
+| `POST` | /api/payments/{id}/refund      | Issue refund (vendor or admin) |
+| `POST` | /api/payments/webhook          | Payment provider webhook       |
+
+***
