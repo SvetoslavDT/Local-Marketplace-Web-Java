@@ -1,5 +1,5 @@
 # Local-Marketplace-Web-Java
-Web application, which manages a local marketplace for handmade and artisan products. 
+A web application for managing an online marketplace for handmade and artisanal products. The platform allows users to create profiles, vendors to offer and manage their products, and customers to browse, filter, and order items. The system includes functionalities for cart, orders, payments, reviews, as well as additional modules such as promotions, craft fairs, and stories to promote artists and their products.
 
 
 
