@@ -161,4 +161,4 @@ Web application, which manages a local marketplace for handmade and artisan prod
 
 ## Structured DB
 
-<img width="1024" height="1536" alt="schema" src="https://github.com/user-attachments/assets/fe9c87b9-4a1f-4694-8ca5-13c807bd2f05" />
+<img width="1024" height="1536" alt="schema" src="https://github.com/user-attachments/assets/68753403-0cb2-4e3f-ac7d-4f8bad02aaeb" />
