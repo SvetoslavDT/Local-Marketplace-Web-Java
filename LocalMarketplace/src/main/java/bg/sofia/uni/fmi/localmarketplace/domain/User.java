@@ -1,26 +1,33 @@
 package bg.sofia.uni.fmi.localmarketplace.domain;
 
+import bg.sofia.uni.fmi.localmarketplace.vo.UserType;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class User {
 
-    private static final AtomicLong idCounter = new AtomicLong(1);
-
+    //Undone
+    private Long id;
     private String name;
     private String password;
     private String email;
+    private UserType userType;
     private boolean active;
-    private final long id;
 
-    // Without lists of purchases and posted offers. They may contain ids of "owners" ( I think not )
+    private List<Product> products;
 
-    public User(String name, String password, String email) {
+    public User(String name, String password, String email, UserType userType) {
         this.name = name;
         this.password = password;
         this.email = email;
         this.active = false;
-        this.id = idCounter.getAndIncrement();
+        this.userType = userType;
+
+        // For Vendors/Admins
+        this.products = new ArrayList<>();
     }
 
     public String getName() {
@@ -47,6 +54,14 @@ public class User {
         this.email = email;
     }
 
+    public UserType getUserType() {
+        return userType;
+    }
+
+    public void setUserType(UserType userType) {
+        this.userType = userType;
+    }
+
     public boolean isActive() {
         return active;
     }
@@ -59,10 +74,18 @@ public class User {
         return id;
     }
 
+    public List<Product> getProducts() {
+        return products;
+    }
+
+    public void setProducts(List<Product> products) {
+        this.products = products;
+    }
+
     @Override
     public boolean equals(Object object) {
         if (!(object instanceof User user)) return false;
-        return id == user.id;
+        return Objects.equals(id, user.id);
     }
 
     @Override

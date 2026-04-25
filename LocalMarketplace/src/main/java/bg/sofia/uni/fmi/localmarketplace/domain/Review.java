@@ -7,19 +7,20 @@ public class Review {
 
     private static final AtomicLong idCounter = new AtomicLong(1);
 
-    private final long id;
+    private final Long id;
+    private final User user;
+    private final Product product;
     private String text;
     private double rating;
 
-    private final long reviewerId;
-    private final long productId;
-
-    public Review(String text, long reviewerId, long productId, double rating) {
+    public Review(User user, Product product, String text, double rating) {
         this.id = idCounter.getAndIncrement();
         this.text = text;
         this.rating = rating;
-        this.reviewerId = reviewerId;
-        this.productId = productId;
+    }
+
+    public long getId() {
+        return id;
     }
 
     public String getText() {
@@ -28,6 +29,14 @@ public class Review {
 
     public void setText(String text) {
         this.text = text;
+    }
+
+    public double getRating() {
+        return rating;
+    }
+
+    public void setRating(double rating) {
+        this.rating = rating;
     }
 
     public long getReviewerId() {
@@ -41,7 +50,7 @@ public class Review {
     @Override
     public boolean equals(Object object) {
         if (!(object instanceof Review review)) return false;
-        return id == review.id;
+        return Objects.equals(id, review.id);
     }
 
     @Override

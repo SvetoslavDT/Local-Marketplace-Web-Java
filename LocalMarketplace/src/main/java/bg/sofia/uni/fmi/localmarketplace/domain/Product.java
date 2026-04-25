@@ -3,26 +3,23 @@ package bg.sofia.uni.fmi.localmarketplace.domain;
 import bg.sofia.uni.fmi.localmarketplace.vo.ProductType;
 
 import java.util.Objects;
-import java.util.concurrent.atomic.AtomicLong;
 
 public class Product {
 
-    private final AtomicLong idCounter =  new AtomicLong(1);
-
-    private final long id;
+    private final Long id;
     private ProductType productType;
     private String description;
     private double price;
-    private int count;
     private String location;
 
-    public Product(ProductType productType, String description, double price, int count, String location) {
-        this.id = idCounter.getAndIncrement();
+    private final User maker;
+
+    public Product(ProductType productType, String description, double price, String location, User maker) {
         this.productType = productType;
         this.description = description;
         this.price = price;
-        this.count = count;
         this.location = location;
+        this.maker = maker;
     }
 
     public long getId() {
@@ -53,30 +50,6 @@ public class Product {
         this.price = price;
     }
 
-    public int getCount() {
-        return count;
-    }
-
-    public void setCount(int count) {
-        this.count = count;
-    }
-
-    public void decrementCount() {
-        this.count--;
-    }
-
-//    public double getRating() {
-//        return rating;
-//    }
-//
-//    public void setRating(float rating) {
-//        if (this.rating == null) {
-//            this.rating = (double) rating;
-//        } else {
-//            this.rating = (this.rating + (double) rating) / 2;
-//        }
-//    }
-
     public String getLocation() {
         return location;
     }
@@ -85,10 +58,14 @@ public class Product {
         this.location = location;
     }
 
+    public User getMaker() {
+        return maker;
+    }
+
     @Override
     public boolean equals(Object object) {
         if (!(object instanceof Product product)) return false;
-        return id == product.id;
+        return Objects.equals(id, product.id);
     }
 
     @Override
