@@ -1,164 +1,252 @@
 # Local-Marketplace-Web-Java
-A web application for managing an online marketplace for handmade and artisanal products. The platform allows users to create profiles, vendors to offer and manage their products, and customers to browse, filter, and order items. The system includes functionalities for cart, orders, payments, reviews, as well as additional modules such as promotions, craft fairs, and stories to promote artists and their products.
 
+A web application for managing an online marketplace for handmade and artisanal products. Users can register, browse and list products, manage a shopping cart, place orders, leave reviews, and create community events (promotions, craft fairs, and storytelling features). A static HTML/CSS/JS frontend is served alongside the REST API.
 
+***
 
+## Tech Stack
+
+| Layer          | Technology                                              |
+| -------------- | ------------------------------------------------------- |
+| Language       | Java 26                                                 |
+| Framework      | Spring Boot 4.0.5                                       |
+| Database       | PostgreSQL (schema: `market`)                           |
+| Migrations     | Liquibase                                               |
+| Security       | Spring Security + JWT (jjwt)                            |
+| API Docs       | springdoc-openapi / Swagger UI                          |
+| ORM            | Spring Data JPA / Hibernate                             |
+| Validation     | Jakarta Bean Validation                                 |
+| Frontend       | Static HTML/CSS/JS (`src/main/resources/static/`)       |
+
+***
+
+## Running Locally
+
+1. Start a PostgreSQL instance and create a schema named `market`.
+2. Configure connection credentials in `src/main/resources/application.yml` (defaults: `localhost:5432`, user `postgres`, password `123456789`).
+3. Run with the `dev` profile — Liquibase applies all migrations automatically:
+   ```
+   ./mvnw spring-boot:run -Dspring-boot.run.profiles=dev
+   ```
+4. The server starts on **port 9090** (dev profile).
+5. Swagger UI is available at: `http://localhost:9090/swagger-ui.html`
+
+***
+
+## Authentication
+
+The API uses **stateless JWT authentication**.
+
+- `POST /auth/register` — creates an account and returns the user profile.
+- `POST /auth/login` — validates credentials and returns a signed JWT token.
+- For all protected endpoints, include the token in the request header:
+  ```
+  Authorization: Bearer <token>
+  ```
+- Logout is client-side only — discard the token; the server keeps no session state.
+
+***
 
 ## REST Resources
+
 ### Authentication
 
-| Method | Endpoint              | Action                    |
-| ------ |:---------------------:| :-------------------------|
-| `POST` | /auth/register        | Register a new user       |
-| `POST` | /auth/login           | User login                |
-| `POST` | /auth/logout          | User logout               |
-| `POST` | /auth/forgot-password | Request to reset password |
+| Method | Endpoint               | Action                              |
+| ------ |:----------------------:| :-----------------------------------|
+| `POST` | /auth/register         | Register a new user                 |
+| `POST` | /auth/login            | Login — returns a JWT token         |
+| `POST` | /auth/logout           | Logout (client discards token)      |
+| `POST` | /auth/forgot-password  | Request password reset (stub)       |
 
 ***
 
 ### Users
 
-| Method   | Endpoint        | Action                                           |
-| -------- |:---------------:| :------------------------------------------------|
-| `GET`    | /api/users      | Get all users (admin)                            |
-| `GET`    | /api/users/{id} | Get a user by ID (admin)                         |
-| `POST`   | /api/users      | Create user                                      |
-| `PUT`    | /api/users/{id} | Update a user (amdin or logged in the same user) |
-| `DELETE` | /api/users/{id} | Delete user (admin)                              |
-
-***
-
-### Vendors
-
-| Method   | Endpoint                 | Action                            |
-| -------- |:------------------------:| :----------------------------------|
-| `GET`    | /api/vendors             | Get all vendors                   |
-| `GET`    | /api/vendors/{id}        | Get a vendor by ID                |
-| `POST`   | /api/vendors             | Create vendor profile             |
-| `PUT`    | /api/vendors/{id}        | Update vendor (owner or admin)    |
-| `DELETE` | /api/vendors/{id}        | Delete vendor (owner or admin)    |
+| Method   | Endpoint                    | Action                                      |
+| -------- |:---------------------------:| :-------------------------------------------|
+| `GET`    | /api/users                  | Get all users (paginated)                   |
+| `GET`    | /api/users/{username}       | Get a user by username                      |
+| `POST`   | /api/users                  | Create user                                 |
+| `PUT`    | /api/users/{username}       | Update user (email, password, phone)        |
+| `DELETE` | /api/users/{username}       | Delete user                                 |
+| `GET`    | /api/users/{username}/is-admin | Check whether a user has admin role      |
 
 ***
 
 ### Products
 
-| Method   | Endpoint                         | Action                           |
-| -------- | :------------------------------: | :--------------------------------|
-| `GET`    | /api/products                    | Get all products                 |
-| `GET`    | /api/products/{id}               | Get product by ID                |
-| `GET`    | /api/vendors/{vendorId}/products | Get all products by vendor       |
-| `POST`   | /api/products                    | Create a new product             |
-| `PUT`    | /api/products/{id}               | Update a product                 |
-| `DELETE` | /api/products/{id}               | Delete a product                 |
+| Method   | Endpoint                          | Action                                     |
+| -------- |:---------------------------------:| :------------------------------------------|
+| `GET`    | /api/products                     | List products (see filters below)          |
+| `GET`    | /api/products/{id}                | Get product by ID                          |
+| `POST`   | /api/products                     | Create a new product (authenticated)       |
+| `PUT`    | /api/products/{id}                | Update a product (maker only)              |
+| `DELETE` | /api/products/{id}                | Delete a product (maker only)              |
+| `GET`    | /api/products/{id}/comments       | Get paginated reviews for a product        |
+| `POST`   | /api/products/{id}/comments       | Submit a review for a product              |
 
 #### Query Parameters for GET /api/products
 
-| Parameter  | Type    | Description                           | Example          |
-|------------|---------|---------------------------------------|------------------|
-| `type`     | String  | Filter products by product type       | type=JEWELRY     |
-| `category` | String  | Filter products by category           | category=handMade|
-| `minPrice` | Number  | Minimum price filter                  | minPrice=10      |
-| `maxPrice` | Number  | Maximum price filter                  | maxPrice=100     |
-| `location` | String  | Filter products by artisan location   | location=Plovdiv |
-| `search`   | String  | Search by product name or description | search=ring      |
-
-***
-
-### Inventory
-
-| Method  | Endpoint                                    | Action                        |
-| ------- |:-------------------------------------------:| :-----------------------------|
-| `GET`   | /api/products/{id}/inventory                | Get stock level for product   |
-| `PATCH` | /api/products/{id}/inventory                | Adjust stock (vendor)         |
-| `GET`   | /api/vendors/{vendorId}/inventory           | Inventory overview for vendor |
-
-***
-
-### Cart
-
-| Method   | Endpoint             | Action                  |
-| -------- |:--------------------:| :------------------------|
-| `GET`    | /api/users/me/cart            | Get current user's cart |
-| `POST`   | /api/users/me/cart/items      | Add item to cart        |
-| `PUT`    | /api/users/me/cart/items/{id} | Update item quantity    |
-| `DELETE` | /api/users/me/cart/items/{id} | Remove item from cart   |
-| `DELETE` | /api/users/me/cart            | Clear cart              |
-
-***
-
-### Orders
-
-| Method   | Endpoint                       | Action                             |
-| -------- |:------------------------------:| :----------------------------------|
-| `GET`    | /api/orders                    | Get all orders (admin)             |
-| `GET`    | /api/orders/{id}               | Get an order by ID                 |
-| `POST`   | /api/orders                    | Place order from cart              |
-| `PATCH`  | /api/orders/{id}/status        | Update order status (vendor/admin) |
-| `PATCH`  | /api/orders/{id}/cancel        | Cancel order (customer or vendor)  |
-| `GET`    | /api/users/me/orders           | Get my orders (customer)           |
-| `GET`    | /api/vendors/{vendorId}/orders | Get orders for vendor              |
-
-***
-
-### Payments
-
-| Method | Endpoint                       | Action                         |
-| ------ |:------------------------------:| :------------------------------|
-| `POST` | /api/orders/{orderId}/payments | Initiate payment for order     |
-| `GET`  | /api/payments/{id}             | Get payment details            |
-| `POST` | /api/payments/{id}/refund      | Issue refund (vendor or admin) |
+| Parameter        | Type   | Description                           | Example                    |
+|------------------|--------|---------------------------------------|----------------------------|
+| `product_type`   | String | Filter by product type enum value     | product_type=JEWELRY       |
+| `maker_username` | String | Filter by the maker's username        | maker_username=john_doe    |
 
 ***
 
 ### Reviews
 
-| Method   | Endpoint                                  | Action                          |
-| -------- |:-----------------------------------------:| :-------------------------------|
-| `GET`    | /api/products/{productId}/reviews         | Get reviews for product         |
-| `POST`   | /api/products/{productId}/reviews         | Submit product review           |
-| `PUT`    | /api/reviews/{id}                         | Update own review               |
-| `DELETE` | /api/reviews/{id}                         | Delete review (author or admin) |
-| `GET`    | /api/vendors/{vendorId}/reviews           | Get reviews for vendor          |
-| `POST`   | /api/vendors/{vendorId}/reviews           | Submit vendor review            |
-
-### Craft Fairs
-
-| Method   | Endpoint                                 | Action                     |
-| -------- |:----------------------------------------:| :--------------------------|
-| `GET`    | /api/craft-fairs                         | Get all craft fairs        |
-| `GET`    | /api/craft-fairs/{id}                    | Get a craft fair by ID     |
-| `POST`   | /api/craft-fairs                         | Create craft fair (admin)  |
-| `PUT`    | /api/craft-fairs/{id}                    | Update craft fair (admin)  |
-| `DELETE` | /api/craft-fairs/{id}                    | Cancel craft fair (admin)  |
-| `GET`    | /api/craft-fairs/{id}/vendors            | List participating vendors |
-| `POST`   | /api/craft-fairs/{id}/vendors            | Vendor joins craft fair    |
-| `DELETE` | /api/craft-fairs/{id}/vendors/{vendorId} | Vendor leaves craft fair   |
+| Method   | Endpoint             | Action                          |
+| -------- |:--------------------:| :-------------------------------|
+| `GET`    | /api/reviews/{id}    | Get a single review by ID       |
+| `PUT`    | /api/reviews/{id}    | Update a review (author only)   |
+| `DELETE` | /api/reviews/{id}    | Delete a review (author only)   |
 
 ***
 
-### Promotions
+### Cart
 
-| Method   | Endpoint                           | Action                          |
-| -------- |:----------------------------------:| :-------------------------------|
-| `GET`    | /api/promotions                    | Get all active promotions       |
-| `GET`    | /api/promotions/{id}               | Get a promotion by ID           |
-| `POST`   | /api/vendors/{vendorId}/promotions | Create promotion (vendor)       |
-| `PUT`    | /api/promotions/{id}               | Update promotion (vendor)       |
-| `DELETE` | /api/promotions/{id}               | End promotion (vendor or admin) |
-
-***
-
-### Stories
-
-| Method   | Endpoint                        | Action                         |
-| -------- |:-------------------------------:| :------------------------------|
-| `GET`    | /api/vendors/{vendorId}/stories | Get stories by vendor          |
-| `POST`   | /api/vendors/{vendorId}/stories | Add story (vendor)             |
-| `PUT`    | /api/stories/{id}               | Update story (vendor)          |
-| `DELETE` | /api/stories/{id}               | Delete story (vendor or admin) |
+| Method   | Endpoint                           | Action                        |
+| -------- |:----------------------------------:| :-----------------------------|
+| `GET`    | /api/users/me/cart                 | Get current user's cart       |
+| `POST`   | /api/users/me/cart/items           | Add item to cart              |
+| `PUT`    | /api/users/me/cart/items/{itemId}  | Update item quantity          |
+| `DELETE` | /api/users/me/cart/items/{itemId}  | Remove item from cart         |
+| `DELETE` | /api/users/me/cart                 | Clear all items from cart     |
 
 ***
 
-## Structured DB
+### Orders
 
-<img width="1024" height="1536" alt="final schema" src="https://github.com/user-attachments/assets/7c5f7875-4807-4a4a-aaf1-51ba509ef921" />
+| Method   | Endpoint                 | Action                                               |
+| -------- |:------------------------:| :----------------------------------------------------|
+| `POST`   | /api/orders              | Place order from cart (snapshots prices, clears cart)|
+| `GET`    | /api/orders              | List orders (admin = all; user = own orders)         |
+| `GET`    | /api/orders/{id}         | Get order by ID (owner or admin)                     |
+| `PATCH`  | /api/orders/{id}/pay     | Pay for a PENDING_PAYMENT order (records payment)    |
+| `PATCH`  | /api/orders/{id}/status  | Update order status (incl. CANCELLED)                |
+
+***
+
+### Events
+
+| Method   | Endpoint           | Action                                           |
+| -------- |:------------------:| :------------------------------------------------|
+| `GET`    | /api/events        | List events (see filters below)                  |
+| `GET`    | /api/events/{id}   | Get event by ID                                  |
+| `POST`   | /api/events        | Create event (authenticated)                     |
+| `PUT`    | /api/events/{id}   | Update event (owner only)                        |
+| `DELETE` | /api/events/{id}   | Delete event (owner only)                        |
+
+#### Query Parameters for GET /api/events
+
+| Parameter | Type    | Description                                                              | Example                   |
+|-----------|---------|--------------------------------------------------------------------------|---------------------------|
+| `type`    | String  | Filter by event type enum value                                          | type=CRAFT_FAIRS          |
+| `active`  | Boolean | Filter by active status                                                  | active=true               |
+
+Event types: `CRAFT_FAIRS`, `PROMOTIONAL_CAMPAIGNS`, `STORYTELLING_FEATURES`.
+
+***
+
+## Database Diagram
+
+```mermaid
+erDiagram
+    users {
+        VARCHAR username PK
+        VARCHAR first_name
+        VARCHAR last_name
+        VARCHAR password
+        VARCHAR email
+        VARCHAR phone
+        VARCHAR user_type
+        TIMESTAMP created_at
+        BOOLEAN active
+    }
+
+    products {
+        BIGINT id PK
+        VARCHAR product_type
+        VARCHAR name
+        TEXT description
+        BIGINT price
+        INT quantity
+        VARCHAR user_id FK
+    }
+
+    reviews {
+        BIGINT id PK
+        VARCHAR user_id FK
+        BIGINT product_id FK
+        TEXT text
+        INT rating
+    }
+
+    carts {
+        BIGINT id PK
+        VARCHAR user_id FK
+    }
+
+    cart_items {
+        BIGINT id PK
+        BIGINT cart_id FK
+        BIGINT product_id FK
+        INT quantity
+    }
+
+    orders {
+        BIGINT id PK
+        VARCHAR user_id FK
+        VARCHAR currency
+        BIGINT total_amount
+        VARCHAR payment_method
+        VARCHAR status
+    }
+
+    order_items {
+        BIGINT id PK
+        BIGINT order_id FK
+        BIGINT product_id FK
+        INT quantity
+        BIGINT price
+    }
+
+    payments {
+        BIGINT id PK
+        BIGINT order_id FK
+        BIGINT amount
+        VARCHAR currency
+        VARCHAR payment_method
+        TIMESTAMP paid_at
+    }
+
+    events {
+        BIGINT id PK
+        VARCHAR user_id FK
+        VARCHAR title
+        TEXT description
+        VARCHAR type
+        TIMESTAMP start_date
+        TIMESTAMP end_date
+        BOOLEAN is_active
+        TEXT content
+        VARCHAR discount_type
+        BIGINT discount_value
+        VARCHAR location
+    }
+
+    users ||--o{ products : "makes"
+    users ||--o| carts : "has"
+    users ||--o{ orders : "places"
+    users ||--o{ reviews : "writes"
+    users ||--o{ events : "hosts"
+    carts ||--o{ cart_items : "contains"
+    products ||--o{ cart_items : "referenced by"
+    orders ||--o{ order_items : "contains"
+    products ||--o{ order_items : "referenced by"
+    orders ||--o| payments : "paid via"
+    products ||--o{ reviews : "receives"
+```
+
+***
