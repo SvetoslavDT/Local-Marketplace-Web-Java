@@ -12,8 +12,7 @@ CREATE TABLE payments
     paid_at        TIMESTAMP                               NOT NULL,
 
     CONSTRAINT pk_payments PRIMARY KEY (id),
-    CONSTRAINT fk_payments_on_order FOREIGN KEY (order_id) REFERENCES orders (id),
-    CONSTRAINT uq_payments_order_id UNIQUE (order_id)
+    CONSTRAINT fk_payments_on_order FOREIGN KEY (order_id) REFERENCES orders (id)
 );
 
 --rollback DROP TABLE payments;

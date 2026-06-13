@@ -1,5 +1,6 @@
 package bg.sofia.uni.fmi.localmarketplace.domain.order;
 
+import bg.sofia.uni.fmi.localmarketplace.domain.Payment;
 import bg.sofia.uni.fmi.localmarketplace.domain.User;
 import bg.sofia.uni.fmi.localmarketplace.vo.CurrencyType;
 import bg.sofia.uni.fmi.localmarketplace.vo.OrderStatus;
@@ -42,26 +43,23 @@ public class Order {
     private long totalAmount;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "payment_method", nullable = false)
-    private PaymentMethod paymentMethod;
-
-    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private OrderStatus status;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItem> orderItems = new ArrayList<>();
 
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Payment> payments = new ArrayList<>();
+
     protected Order() {
 
     }
 
-    public Order(User user, CurrencyType currency, long totalAmount, PaymentMethod paymentMethod, OrderStatus status,
-                 List<OrderItem> orderItems) {
+    public Order(User user, CurrencyType currency, long totalAmount, OrderStatus status, List<OrderItem> orderItems) {
         this.user = user;
         this.currency = currency;
         this.totalAmount = totalAmount;
-        this.paymentMethod = paymentMethod;
         this.status = status;
         this.orderItems = orderItems;
     }
@@ -90,14 +88,6 @@ public class Order {
         this.totalAmount = totalAmount;
     }
 
-    public PaymentMethod getPaymentMethod() {
-        return paymentMethod;
-    }
-
-    public void setPaymentMethod(PaymentMethod paymentMethod) {
-        this.paymentMethod = paymentMethod;
-    }
-
     public OrderStatus getStatus() {
         return status;
     }
@@ -112,6 +102,14 @@ public class Order {
 
     public void setOrderItems(List<OrderItem> orderItems) {
         this.orderItems = orderItems;
+    }
+
+    public List<Payment> getPayments() {
+        return payments;
+    }
+
+    public void setPayments(List<Payment> payments) {
+        this.payments = payments;
     }
 
     @Override

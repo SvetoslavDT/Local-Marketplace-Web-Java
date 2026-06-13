@@ -56,7 +56,7 @@ public class Product {
         this.quantity = quantity;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
