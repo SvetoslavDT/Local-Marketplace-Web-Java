@@ -7,6 +7,7 @@ import bg.sofia.uni.fmi.localmarketplace.utils.FileServiceRoot;
 import bg.sofia.uni.fmi.localmarketplace.utils.ValidationUtils;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
+import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -17,6 +18,7 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.UUID;
 
+@Service
 public class FileServiceImpl implements FileService {
 
     private final FileServiceRoot root;

@@ -8,7 +8,6 @@ import bg.sofia.uni.fmi.localmarketplace.exception.file.FileServiceException;
 
 import java.nio.file.Path;
 
-@Service
 public interface FileService {
 
     /**
