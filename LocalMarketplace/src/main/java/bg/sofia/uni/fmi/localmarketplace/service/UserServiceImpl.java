@@ -2,6 +2,7 @@ package bg.sofia.uni.fmi.localmarketplace.service;
 
 import java.util.Optional;
 
+import bg.sofia.uni.fmi.localmarketplace.exception.user.UserAlreadyVendorException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -89,6 +90,16 @@ public class UserServiceImpl implements UserService {
         }
 
         return UserDetailsDTO.from(existingUser);
+    }
+
+    @Override
+    public void makeUserVendor(String username) {
+        User user = getUserByUsername(username);
+        if (user.getUserType().equals(UserType.VENDOR)) {
+            throw new UserAlreadyVendorException("User " +  username + " is already a vendor.");
+        }
+
+        user.setUserType(UserType.VENDOR);
     }
 
     @Override
