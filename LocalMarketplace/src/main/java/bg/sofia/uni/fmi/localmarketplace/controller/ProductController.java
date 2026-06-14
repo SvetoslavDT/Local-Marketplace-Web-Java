@@ -23,6 +23,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.ErrorResponse;
@@ -118,7 +119,7 @@ public class ProductController {
         @ApiResponse(responseCode = "404", description = "Product not found with the provided ID."),
         @ApiResponse(responseCode = "500", description = "Unexpected server error.")
     })
-    @PatchMapping("/{id}/picture")
+    @PatchMapping(value = "/{id}/picture", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> changeProductPicture(
         @PathVariable Long id,
         @RequestParam("file") MultipartFile picture) {
