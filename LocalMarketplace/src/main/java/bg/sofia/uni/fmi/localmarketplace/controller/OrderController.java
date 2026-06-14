@@ -2,6 +2,7 @@ package bg.sofia.uni.fmi.localmarketplace.controller;
 
 import bg.sofia.uni.fmi.localmarketplace.dto.input.order.PlaceOrderDTO;
 import bg.sofia.uni.fmi.localmarketplace.dto.input.order.UpdateOrderStatusDTO;
+import bg.sofia.uni.fmi.localmarketplace.dto.input.payment.CreatePaymentDTO;
 import bg.sofia.uni.fmi.localmarketplace.dto.output.order.OrderDetailsDTO;
 import bg.sofia.uni.fmi.localmarketplace.response.ValidationErrorResponse;
 import bg.sofia.uni.fmi.localmarketplace.service.contract.OrderService;
@@ -108,6 +109,8 @@ public class OrderController {
         description = "Simulates payment for a PENDING_PAYMENT order. Records the payment and transitions the order status to PROCESSING. Accessible by the order owner or an admin.")
     @ApiResponses({
         @ApiResponse(responseCode = "200", description = "Payment recorded, order moved to PROCESSING"),
+        @ApiResponse(responseCode = "400", description = "Invalid payment data supplied",
+            content = @Content(schema = @Schema())),
         @ApiResponse(responseCode = "403", description = "Requester is not the order owner or an admin",
             content = @Content(schema = @Schema())),
         @ApiResponse(responseCode = "404", description = "Order not found",
@@ -117,7 +120,8 @@ public class OrderController {
     })
     public ResponseEntity<OrderDetailsDTO> payOrder(
         @Parameter(description = "Order ID", required = true) @PathVariable Long id,
+        @Valid @RequestBody CreatePaymentDTO dto,
         @Parameter(hidden = true) Principal principal) {
-        return ResponseEntity.ok(orderService.payOrder(id, principal.getName()));
+        return ResponseEntity.ok(orderService.payOrder(id, principal.getName(), dto));
     }
 }

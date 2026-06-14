@@ -3,6 +3,8 @@ package bg.sofia.uni.fmi.localmarketplace.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import bg.sofia.uni.fmi.localmarketplace.dto.input.payment.CreatePaymentDTO;
+import bg.sofia.uni.fmi.localmarketplace.dto.output.payment.PaymentDetailsDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -56,7 +58,7 @@ public class OrderServiceImpl implements OrderService {
         List<CartItem> cartItems = cart.getItems();
         validateStockAvailability(cartItems);
 
-        Order order = new Order(user, dto.currency(), 0L, dto.paymentMethod(),
+        Order order = new Order(user, dto.currency(), 0L,
             OrderStatus.PENDING_PAYMENT, new ArrayList<>());
         order.setTotalAmount(buildOrderItems(order, cartItems));
         orderRepository.save(order);
@@ -86,7 +88,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public OrderDetailsDTO payOrder(Long id, String requester) {
+    public OrderDetailsDTO payOrder(Long id, String requester, CreatePaymentDTO dto) {
         Order order = findOrder(id);
         assertOwnerOrAdmin(order, requester);
 
@@ -96,8 +98,7 @@ public class OrderServiceImpl implements OrderService {
                     + " Current status: " + order.getStatus());
         }
 
-        paymentRepository.save(
-            new Payment(order, order.getTotalAmount(), order.getCurrency(), order.getPaymentMethod()));
+        paymentRepository.save(new Payment(order, order.getTotalAmount(), order.getCurrency(), dto.paymentMethod()));
         order.setStatus(OrderStatus.PROCESSING);
 
         return OrderDetailsDTO.from(order);

@@ -8,7 +8,6 @@ CREATE TABLE orders
     user_id        VARCHAR(50)                             NOT NULL,
     currency       VARCHAR(10)                             NOT NULL,
     total_amount   BIGINT                                  NOT NULL,
-    payment_method VARCHAR(50)                             NOT NULL,
     status         VARCHAR(50)                             NOT NULL,
 
     CONSTRAINT pk_orders PRIMARY KEY (id),

@@ -54,7 +54,7 @@ public class CartServiceImpl implements CartService {
         Cart cart = getOrCreateCart(user);
 
         Optional<CartItem> existing = cart.getItems().stream()
-            .filter(item -> item.getProduct().getId() == product.getId())
+            .filter(item -> item.getProduct().getId().equals(product.getId()))
             .findFirst();
 
         if (existing.isPresent()) {

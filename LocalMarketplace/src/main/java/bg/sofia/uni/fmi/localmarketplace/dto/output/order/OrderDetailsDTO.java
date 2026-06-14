@@ -22,9 +22,6 @@ public record OrderDetailsDTO(
     @Schema(description = "Total amount of the order")
     long totalAmount,
 
-    @Schema(description = "Payment method used")
-    PaymentMethod paymentMethod,
-
     @Schema(description = "Current status of the order")
     OrderStatus status,
 
@@ -41,7 +38,6 @@ public record OrderDetailsDTO(
             order.getUser().getUsername(),
             order.getCurrency(),
             order.getTotalAmount(),
-            order.getPaymentMethod(),
             order.getStatus(),
             items
         );

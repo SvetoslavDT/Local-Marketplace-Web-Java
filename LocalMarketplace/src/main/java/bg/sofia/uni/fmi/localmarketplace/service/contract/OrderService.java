@@ -1,5 +1,6 @@
 package bg.sofia.uni.fmi.localmarketplace.service.contract;
 
+import bg.sofia.uni.fmi.localmarketplace.dto.input.payment.CreatePaymentDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -20,7 +21,7 @@ public interface OrderService {
      * computes totalAmount, sets status PENDING_PAYMENT, decrements product stock, and clears the cart.
      *
      * @param username the username of the customer placing the order
-     * @param dto      payment method and currency
+     * @param dto      currency
      * @return created {@link OrderDetailsDTO}
      * @throws UserNotFoundException      if the user does not exist
      * @throws EmptyCartException         if the cart is absent or contains no items
@@ -69,10 +70,11 @@ public interface OrderService {
      *
      * @param id        the order ID
      * @param requester the requesting user's username
+     * @param dto the data for creating the payment
      * @return updated {@link OrderDetailsDTO} with status PROCESSING
      * @throws OrderDoesNotExistException  if the order does not exist
      * @throws OwnershipMismatchException  if the requester is neither the owner nor an admin
      * @throws InvalidOrderStatusException if the order is not in PENDING_PAYMENT status
      */
-    OrderDetailsDTO payOrder(Long id, String requester);
+    OrderDetailsDTO payOrder(Long id, String requester, CreatePaymentDTO dto);
 }
