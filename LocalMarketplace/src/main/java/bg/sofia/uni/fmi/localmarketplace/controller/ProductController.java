@@ -5,9 +5,11 @@ import bg.sofia.uni.fmi.localmarketplace.dto.input.product.UpdateProductDTO;
 import bg.sofia.uni.fmi.localmarketplace.dto.input.review.CreateReviewDTO;
 import bg.sofia.uni.fmi.localmarketplace.dto.output.product.ProductDetailsDTO;
 import bg.sofia.uni.fmi.localmarketplace.dto.output.review.ReviewDetailsDTO;
+import bg.sofia.uni.fmi.localmarketplace.exception.file.InvalidFileFormatException;
 import bg.sofia.uni.fmi.localmarketplace.response.ValidationErrorResponse;
 import bg.sofia.uni.fmi.localmarketplace.service.contract.ProductService;
 import bg.sofia.uni.fmi.localmarketplace.service.contract.ReviewService;
+import bg.sofia.uni.fmi.localmarketplace.utils.ValidationUtils;
 import bg.sofia.uni.fmi.localmarketplace.vo.ProductType;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -26,6 +28,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -33,6 +36,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.security.Principal;
 
@@ -87,6 +91,7 @@ public class ProductController {
         return ResponseEntity.ok(products);
     }
 
+
     @GetMapping("/{id}")
     @Operation(summary = "Get product by ID",
         description = "Retrieves detailed information about a specific product using its unique identifier.")
@@ -101,6 +106,29 @@ public class ProductController {
 
         ProductDetailsDTO product = productService.getProduct(id);
         return ResponseEntity.ok(product);
+    }
+
+    @Operation(
+        summary = "Upload or update product picture",
+        description = "Uploads a JPG image for the specified product. If a picture already exists, it will be replaced."
+    )
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "204", description = "Product picture uploaded successfully."),
+        @ApiResponse(responseCode = "400", description = "Invalid file format or missing file."),
+        @ApiResponse(responseCode = "404", description = "Product not found with the provided ID."),
+        @ApiResponse(responseCode = "500", description = "Unexpected server error.")
+    })
+    @PatchMapping("/{id}/picture")
+    public ResponseEntity<Void> changeProductPicture(
+        @PathVariable Long id,
+        @RequestParam("file") MultipartFile picture) {
+
+        if (!ValidationUtils.isJpgFile(picture)) {
+            throw new InvalidFileFormatException("Only JPG files are allowed");
+        }
+
+        productService.setProductPicture(id, picture);
+        return ResponseEntity.noContent().build();
     }
 
     @PostMapping
