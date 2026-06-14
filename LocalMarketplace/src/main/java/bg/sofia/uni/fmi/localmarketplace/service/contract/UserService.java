@@ -4,6 +4,7 @@ import bg.sofia.uni.fmi.localmarketplace.dto.input.user.CreateUserDTO;
 import bg.sofia.uni.fmi.localmarketplace.dto.input.user.UpdateUserDTO;
 import bg.sofia.uni.fmi.localmarketplace.dto.output.user.UserDetailsDTO;
 import bg.sofia.uni.fmi.localmarketplace.exception.user.UserAlreadyExistsException;
+import bg.sofia.uni.fmi.localmarketplace.exception.user.UserAlreadyVendorException;
 import bg.sofia.uni.fmi.localmarketplace.exception.user.UserNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -50,12 +51,21 @@ public interface UserService {
     /**
      * Updates an existing user profile details.
      *
-     * @param username the username of the user to update
+     * @param username  the username of the user to update
      * @param updateDTO the new data to apply to the profile
      * @return the updated user details DTO
      * @throws UserNotFoundException if no user with the given username exists
      */
     UserDetailsDTO updateUser(String username, UpdateUserDTO updateDTO);
+
+    /**
+     * Makes a user able to sell products
+     *
+     * @param username the username of the user
+     * @throws UserNotFoundException      if the user does not exist
+     * @throws UserAlreadyVendorException if the user is already a vendor
+     */
+    void makeUserVendor(String username);
 
     /**
      * Deletes the user.

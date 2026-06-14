@@ -20,6 +20,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -91,6 +92,22 @@ public class UserController {
         @PathVariable String username,
         @Valid @RequestBody UpdateUserDTO updateUserDTO) {
         return ResponseEntity.ok(userService.updateUser(username, updateUserDTO));
+    }
+
+    @PatchMapping("/{username}/become-vendor")
+    @Operation(summary = "Make a user vendor", description = "Makes the user able to sell products")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "User updated successfully"),
+        @ApiResponse(responseCode = "401", description = "Unauthorised entry. User must be logged."),
+        @ApiResponse(responseCode = "404", description = "User with username not found."),
+        @ApiResponse(responseCode = "500", description = "Internal server error.")
+    })
+    public ResponseEntity<String> becomeVendor(
+        @Parameter(description = "The unique username of the user to be updated", required = true)
+        @PathVariable String username) {
+
+        userService.makeUserVendor(username);
+        return ResponseEntity.ok("The user is already a Vendor. Please generate a new JWT token.");
     }
 
     @DeleteMapping("/{username}")
