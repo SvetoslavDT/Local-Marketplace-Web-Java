@@ -33,6 +33,9 @@ public class Product {
     @Column(length = 100, columnDefinition = "TEXT")
     private String description;
 
+    @Column(name = "product_picture_path", length = 1024)
+    private String productPicturePath;
+
     @Column(nullable = false)
     private long price;
 
@@ -82,6 +85,14 @@ public class Product {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getProductPicturePath() {
+        return productPicturePath;
+    }
+
+    public void setProductPicturePath(String productPicturePath) {
+        this.productPicturePath = productPicturePath;
     }
 
     public long getPrice() {

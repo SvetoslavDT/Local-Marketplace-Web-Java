@@ -10,8 +10,6 @@ import java.io.PrintWriter;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-import static java.nio.file.Files.write;
-
 @Component
 @Profile("prod")
 public class FileAppLogger implements AppLogger {

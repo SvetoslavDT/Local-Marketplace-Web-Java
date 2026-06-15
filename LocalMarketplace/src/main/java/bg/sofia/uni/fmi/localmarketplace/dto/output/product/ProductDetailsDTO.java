@@ -18,6 +18,9 @@ public record ProductDetailsDTO(
     @Schema(description = "Description of the product", requiredMode = Schema.RequiredMode.REQUIRED, maxLength = 100)
     String description,
 
+    @Schema(description = "Path to product image (JPG file)", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+    String productPicturePath,
+
     @Schema(description = "Price of the product", requiredMode = Schema.RequiredMode.REQUIRED)
     long price,
 
@@ -31,7 +34,7 @@ public record ProductDetailsDTO(
     public static ProductDetailsDTO from(Product product) {
 
         return new ProductDetailsDTO(product.getId(), product.getProductType(), product.getName(),
-            product.getDescription(), product.getPrice(), product.getQuantity(),
+            product.getDescription(), product.getProductPicturePath(), product.getPrice(), product.getQuantity(),
             new OutputProductMakerDTO(product.getMaker().getUsername(), product.getMaker().getEmail()));
     }
 }

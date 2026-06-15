@@ -4,11 +4,14 @@ import bg.sofia.uni.fmi.localmarketplace.dto.input.product.CreateProductDTO;
 import bg.sofia.uni.fmi.localmarketplace.dto.input.product.UpdateProductDTO;
 import bg.sofia.uni.fmi.localmarketplace.dto.output.product.ProductDetailsDTO;
 
+import bg.sofia.uni.fmi.localmarketplace.exception.file.FileServiceException;
+import bg.sofia.uni.fmi.localmarketplace.exception.file.InvalidFileFormatException;
 import bg.sofia.uni.fmi.localmarketplace.exception.product.ProductDoesNotExistException;
 import bg.sofia.uni.fmi.localmarketplace.exception.user.UserNotFoundException;
 import bg.sofia.uni.fmi.localmarketplace.vo.ProductType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.web.multipart.MultipartFile;
 
 public interface ProductService {
 
@@ -38,6 +41,20 @@ public interface ProductService {
      * @return a page of product responses
      */
     Page<ProductDetailsDTO> getProductsWithFilters(ProductType productType, String makerUsername, Pageable pageable);
+
+    /**
+     * Uploads or replaces the product picture for the specified product.
+     * <p>
+     * The picture must be in JPG format. If a picture already exists for the product,
+     * it will be replaced.
+     *
+     * @param productId the unique identifier of the product whose picture will be set
+     * @param picture the image file to be uploaded (must be a valid JPG file)
+     * @throws IllegalArgumentException if the picture is null or empty
+     * @throws InvalidFileFormatException if the provided file is not a valid JPG image
+     * @throws ProductDoesNotExistException if no product exists with the given id
+     */
+    void setProductPicture(Long productId, MultipartFile picture);
 
     /**
      * Creates a new artisan product and assigns it to the current logged-in user.

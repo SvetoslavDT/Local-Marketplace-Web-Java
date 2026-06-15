@@ -5,18 +5,23 @@ import bg.sofia.uni.fmi.localmarketplace.domain.User;
 import bg.sofia.uni.fmi.localmarketplace.dto.input.product.CreateProductDTO;
 import bg.sofia.uni.fmi.localmarketplace.dto.input.product.UpdateProductDTO;
 import bg.sofia.uni.fmi.localmarketplace.dto.output.product.ProductDetailsDTO;
+import bg.sofia.uni.fmi.localmarketplace.exception.file.InvalidFileFormatException;
 import bg.sofia.uni.fmi.localmarketplace.exception.product.ProductDoesNotBelongToUserExeption;
 import bg.sofia.uni.fmi.localmarketplace.exception.product.ProductDoesNotExistException;
 import bg.sofia.uni.fmi.localmarketplace.exception.user.UserNotFoundException;
 import bg.sofia.uni.fmi.localmarketplace.repository.ProductRepository;
 import bg.sofia.uni.fmi.localmarketplace.repository.UserRepository;
+import bg.sofia.uni.fmi.localmarketplace.service.contract.FileService;
 import bg.sofia.uni.fmi.localmarketplace.service.contract.ProductService;
+import bg.sofia.uni.fmi.localmarketplace.utils.ValidationUtils;
 import bg.sofia.uni.fmi.localmarketplace.vo.ProductType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.nio.file.Path;
 import java.util.Optional;
 
 @Service
@@ -25,10 +30,13 @@ public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
     private final UserRepository userRepository;
+    private final FileService fileService;
 
-    public ProductServiceImpl(ProductRepository productRepository, UserRepository userRepository) {
+    public ProductServiceImpl(ProductRepository productRepository, UserRepository userRepository,
+                              FileService fileService) {
         this.productRepository = productRepository;
         this.userRepository = userRepository;
+        this.fileService = fileService;
     }
 
     @Override
@@ -60,9 +68,34 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Transactional
+    public void setProductPicture(Long productId, MultipartFile picture) {
+        Product product = productRepository.findById(productId)
+            .orElseThrow(() -> new ProductDoesNotExistException("Product not found: " + productId));
+
+        if (picture == null || picture.isEmpty()) {
+            throw new IllegalArgumentException("Missing picture file");
+        }
+
+        if (!ValidationUtils.isJpgFile(picture)) {
+            throw new InvalidFileFormatException("Only JPG files are allowed");
+        }
+
+        String filename = fileService.saveOrReplaceJpg(
+            picture,
+            Path.of("products"),
+            String.valueOf(productId)
+        );
+
+        product.setProductPicturePath(Path.of("products", filename).toString().replace("\\", "/"));
+        productRepository.save(product);
+    }
+
+    @Override
     public ProductDetailsDTO createProduct(CreateProductDTO dto, String username) {
         User user = getUser(username);
-        Product product = new Product(dto.productType(), dto.name(), dto.description(), dto.price(), user, dto.quantity());
+        Product product =
+            new Product(dto.productType(), dto.name(), dto.description(), dto.price(), user, dto.quantity());
 
         productRepository.save(product);
         return ProductDetailsDTO.from(product);
@@ -92,6 +125,7 @@ public class ProductServiceImpl implements ProductService {
 
         checkIfTheMakerOfTheProductIsTheSame(toDelete.getMaker(), user, id);
 
+        fileService.deleteFile(Path.of("products", id + ".jpg"));
         productRepository.delete(toDelete);
     }
 
