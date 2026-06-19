@@ -51,18 +51,12 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Page<ProductDetailsDTO> getProductsWithFilters(ProductType productType, String makerUsername,
-                                                          Pageable pageable) {
-        Page<Product> page;
+                                                          Boolean inStock, Pageable pageable) {
 
-        if (productType != null && makerUsername != null && !makerUsername.isBlank()) {
-            page = productRepository.findByProductTypeAndMaker_Username(productType, makerUsername, pageable);
-        } else if (productType != null) {
-            page = productRepository.findByProductType(productType, pageable);
-        } else if (makerUsername != null && !makerUsername.isBlank()) {
-            page = productRepository.findByMakerUsername(makerUsername, pageable);
-        } else {
-            page = productRepository.findAll(pageable);
-        }
+        String sanitizedUsername = (makerUsername != null && !makerUsername.isBlank()) ? makerUsername : null;
+
+        Page<Product> page = productRepository.findProductsWithFilters(productType, sanitizedUsername,
+            inStock, pageable);
 
         return page.map(ProductDetailsDTO::from);
     }

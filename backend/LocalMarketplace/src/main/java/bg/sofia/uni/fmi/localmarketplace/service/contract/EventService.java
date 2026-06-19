@@ -40,10 +40,11 @@ public interface EventService {
      *
      * @param type     when non-null, only events of this type are returned
      * @param active   when non-null, only events matching this active flag are returned
+     * @param upcoming the boolean whether to get upcoming events or not
      * @param pageable pagination and sorting parameters
      * @return page of {@link EventDetailsDTO}
      */
-    Page<EventDetailsDTO> getAllEvents(EventType type, Boolean active, Pageable pageable);
+    Page<EventDetailsDTO> getAllEvents(EventType type, Boolean active, Boolean upcoming , Pageable pageable);
 
     /**
      * Updates an existing event. Only the owner (or an admin) may update. Null fields in {@code dto} are ignored.

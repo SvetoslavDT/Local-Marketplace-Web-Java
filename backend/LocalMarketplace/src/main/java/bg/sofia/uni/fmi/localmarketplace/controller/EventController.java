@@ -55,8 +55,10 @@ public class EventController {
         @RequestParam(required = false) EventType type,
         @Parameter(description = "Filter by active status")
         @RequestParam(required = false) Boolean active,
+        @Parameter(description = "Filter by upcoming events (starts from now onwards)")
+        @RequestParam(required = false) Boolean upcoming,
         @PageableDefault(size = 20) Pageable pageable) {
-        return ResponseEntity.ok(eventService.getAllEvents(type, active, pageable));
+        return ResponseEntity.ok(eventService.getAllEvents(type, active, upcoming, pageable));
     }
 
     @GetMapping("/{id}")

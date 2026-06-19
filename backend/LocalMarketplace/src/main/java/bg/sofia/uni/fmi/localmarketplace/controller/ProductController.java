@@ -86,9 +86,13 @@ public class ProductController {
         @Parameter(description = "Filter by the unique username of the maker")
         @RequestParam(name = "maker_username", required = false) String makerUsername,
 
+        @Parameter(description = "Filter by stock availability (true/false)")
+        @RequestParam(name = "in_stock", required = false) Boolean inStock,
+
         @PageableDefault(size = 12, sort = "id") Pageable pageable) {
 
-        Page<ProductDetailsDTO> products = productService.getProductsWithFilters(productType, makerUsername, pageable);
+        Page<ProductDetailsDTO> products =
+            productService.getProductsWithFilters(productType, makerUsername, inStock, pageable);
         return ResponseEntity.ok(products);
     }
 

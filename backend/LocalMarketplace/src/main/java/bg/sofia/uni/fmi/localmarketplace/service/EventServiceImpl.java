@@ -66,17 +66,11 @@ public class EventServiceImpl implements EventService {
 
     @Override
     @Transactional(readOnly = true)
-    public Page<EventDetailsDTO> getAllEvents(EventType type, Boolean active, Pageable pageable) {
-        if (type != null && active != null) {
-            return eventRepository.findByTypeAndActive(type, active, pageable).map(EventDetailsDTO::from);
-        }
-        if (type != null) {
-            return eventRepository.findByType(type, pageable).map(EventDetailsDTO::from);
-        }
-        if (active != null) {
-            return eventRepository.findByActive(active, pageable).map(EventDetailsDTO::from);
-        }
-        return eventRepository.findAll(pageable).map(EventDetailsDTO::from);
+    public Page<EventDetailsDTO> getAllEvents(EventType type, Boolean active, Boolean upcoming, Pageable pageable) {
+
+        Page<Event> page = eventRepository.findEventsWithFilters(type, active, upcoming, pageable);
+
+        return page.map(EventDetailsDTO::from);
     }
 
     @Override
