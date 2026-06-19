@@ -8,6 +8,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
+
 public interface EventRepository extends JpaRepository<Event, Long> {
 
     Page<Event> findByType(EventType type, Pageable pageable);
@@ -16,12 +18,18 @@ public interface EventRepository extends JpaRepository<Event, Long> {
 
     Page<Event> findByTypeAndActive(EventType type, boolean active, Pageable pageable);
 
-    @Query("SELECT e FROM Event e WHERE " +
-        "(:type IS NULL OR e.type = :type) AND " +
-        "(:active IS NULL OR e.active = :active) AND " +
-        "(:upcoming IS NULL OR (:upcoming = true AND e.startDate >= CURRENT_TIMESTAMP))")
+    @Query("""
+SELECT e FROM Event e
+WHERE
+(:types IS NULL OR e.type IN :types)
+AND (:active IS NULL OR e.active = :active)
+AND (
+    :upcoming IS NULL
+    OR (:upcoming = true AND e.startDate >= CURRENT_TIMESTAMP)
+)
+""")
     Page<Event> findEventsWithFilters(
-        @Param("type") EventType type,
+        @Param("types") List<EventType> types,
         @Param("active") Boolean active,
         @Param("upcoming") Boolean upcoming,
         Pageable pageable

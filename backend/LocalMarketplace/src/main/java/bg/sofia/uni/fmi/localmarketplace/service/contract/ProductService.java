@@ -13,6 +13,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 public interface ProductService {
 
     /**
@@ -35,14 +37,14 @@ public interface ProductService {
     /**
      * Retrieves a paginated page of products optionally filtered by type and maker
      *
-     * @param productType   the type of the product
+     * @param productTypes   the types of the products to get
      * @param makerUsername the username of the maker
-     * @param inStock true if product is in stock, otherwise false
+     * @param inStock       true if product is in stock, otherwise false
      * @param pageable      pagination and sorting details for the products
      * @return a page of product responses
      */
-    Page<ProductDetailsDTO> getProductsWithFilters(ProductType productType, String makerUsername, Boolean inStock,
-                                                   Pageable pageable);
+    Page<ProductDetailsDTO> getProductsWithFilters(List<ProductType> productTypes, String makerUsername,
+                                                   Boolean inStock, Pageable pageable);
 
     /**
      * Uploads or replaces the product picture for the specified product.
