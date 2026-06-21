@@ -1,5 +1,5 @@
 import {CommonModule} from '@angular/common';
-import {Component, EventEmitter, Output, signal} from '@angular/core';
+import {Component, EventEmitter, Output, signal, output} from '@angular/core';
 import { ProductType } from '../../../core/models/product/type';
 import { EventType } from '../../../core/models/event/type';
 import { EventFilters } from '../../../core/models/event/filters';

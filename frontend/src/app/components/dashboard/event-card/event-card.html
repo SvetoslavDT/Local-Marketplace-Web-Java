@@ -1,24 +1,10 @@
-<div class="card">
+<a class="entity-card" [routerLink]="['/events', event().id]">
+  <div class="content">
+    <div class="name">{{ event().title }}</div>
 
-  <div class="title">
-    {{ event().title }}
-  </div>
-
-  <div class="info">
-    <div>Type: {{ event().type }}</div>
-
-    <div>
-      Active:
-      <span [class.active]="event().active">
-        {{ event().active ? 'Yes' : 'No' }}
-      </span>
+    <div class="meta">
+      <span>Start: {{ formatDate(event().startDate) }}</span>
+      <span>End: {{ formatDate(event().endDate) }}</span>
     </div>
-
-    <div>
-      Start:
-      {{ event().startDate | date:'short' }}
-    </div>
-
   </div>
-
-</div>
+</a>

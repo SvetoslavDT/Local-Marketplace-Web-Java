@@ -1,0 +1,28 @@
+.dashboard {
+  display: flex;
+  min-height: calc(100vh - 72px);
+  background: #edf3f8;
+}
+
+.main {
+  flex: 1;
+  padding: 28px;
+}
+
+.heading h1 {
+  margin: 0;
+  color: #1e3a5f;
+  font-size: 34px;
+}
+
+.heading p {
+  margin: 8px 0 24px;
+  color: #486581;
+  font-size: 18px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+}

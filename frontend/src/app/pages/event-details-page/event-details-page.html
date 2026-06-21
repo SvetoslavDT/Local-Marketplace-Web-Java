@@ -1,0 +1,30 @@
+<div class="page">
+  <a class="back-link" routerLink="/dashboard">← Back to dashboard</a>
+
+  @if (loading()) {
+    <div class="state">Loading event...</div>
+  } @else if (error()) {
+    <div class="state error">{{ error() }}</div>
+  } @else if (event()) {
+    <div class="hero">
+      <div class="hero-info">
+        <h1>{{ event()!.title }}</h1>
+        <div class="hero-line">Start: {{ formatDate(event()!.startDate) }}</div>
+        <div class="hero-line">End: {{ formatDate(event()!.endDate) }}</div>
+      </div>
+    </div>
+
+    <div class="details-card">
+      <div class="section-title">Full event details</div>
+
+      <div class="rows">
+        @for (entry of entries(); track entry[0]) {
+          <div class="row">
+            <div class="key">{{ formatKey(entry[0]) }}</div>
+            <div class="value">{{ formatValue(entry[1]) }}</div>
+          </div>
+        }
+      </div>
+    </div>
+  }
+</div>

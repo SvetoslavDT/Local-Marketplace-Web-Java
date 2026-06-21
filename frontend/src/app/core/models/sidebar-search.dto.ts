@@ -3,7 +3,7 @@ import { EventFilters } from './event/filters';
 
 export type SearchMode = 'products' | 'events';
 
-export interface SidebarSearch {
+export interface SidebarSearchPayload {
   mode: SearchMode;
   productFilters?: ProductFilters;
   eventFilters?: EventFilters;

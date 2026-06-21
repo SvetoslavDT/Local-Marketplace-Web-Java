@@ -1,18 +1,22 @@
-<div class="card">
-
-  <div class="title">
-    {{ product().name }}
+<a class="entity-card" [routerLink]="['/products', product().id]">
+  <div class="image-box">
+    @if (product().imageUrl) {
+      <img
+        class="product-image"
+        [src]="product().imageUrl!"
+        [alt]="product().name"
+      />
+    } @else {
+      <div class="image-placeholder">No image</div>
+    }
   </div>
 
-  <div class="info">
-    <div>Type: {{ product().productType }}</div>
-    <div>Maker: {{ product().makerUsername }}</div>
-    <div>
-      Stock:
-      <span [class.in-stock]="product().quantity > 0">
-        {{ product().quantity > 0 ? 'In stock' : 'Out of stock' }}
-      </span>
+  <div class="content">
+    <div class="name">{{ product().name }}</div>
+
+    <div class="meta">
+      <span class="price">Price: {{ formatPrice(product().price) }}</span>
+      <span class="quantity">Qty: {{ product().quantity }}</span>
     </div>
   </div>
-
-</div>
+</a>

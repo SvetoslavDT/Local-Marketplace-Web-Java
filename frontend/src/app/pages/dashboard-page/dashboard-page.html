@@ -1,29 +1,26 @@
 <app-top-bar></app-top-bar>
 
 <div class="dashboard">
+  <div class="main">
+    <div class="heading">
+      <h1>Hello</h1>
+      <p>What are you looking for today?</p>
+    </div>
 
-  <app-filter-sidebar
-    (search)="onSearch($event)">
-  </app-filter-sidebar>
-
-  <div class="results">
-
-    @if (products().length > 0) {
+    @if (activeMode() === 'products') {
       <div class="grid">
         @for (p of products(); track p.id) {
           <app-product-card [product]="p"></app-product-card>
         }
       </div>
-    }
-
-    @if (events().length > 0) {
+    } @else {
       <div class="grid">
         @for (e of events(); track e.id) {
           <app-event-card [event]="e"></app-event-card>
         }
       </div>
     }
-
   </div>
 
+  <app-filter-sidebar (search)="onSearch($event)"></app-filter-sidebar>
 </div>

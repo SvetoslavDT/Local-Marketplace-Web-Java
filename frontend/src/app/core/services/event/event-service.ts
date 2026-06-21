@@ -31,4 +31,8 @@ export class EventService {
 
     return this.http.get(this.baseUrl, { params });
   }
+
+  getEventById(id: number): Observable<any> {
+    return this.http.get(`${this.baseUrl}/${id}`);
+  }
 }
