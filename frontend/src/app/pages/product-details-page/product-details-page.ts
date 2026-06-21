@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { ProductDetailsDto } from "../../core/models/product/product-details.dto";
-import { ProductService } from '../../core/services/product/product';
+import { ProductService } from '../../core/services/product/product-service';
 
 @Component({
   selector: 'app-product-details-page',

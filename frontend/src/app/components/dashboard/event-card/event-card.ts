@@ -1,14 +1,14 @@
 import { CommonModule } from '@angular/common';
 import { Component, input } from '@angular/core';
-import { DatePipe } from '@angular/common';
+import { RouterLink } from '@angular/router';
 import { EventDetailsDto } from "../../../core/models/event/event-details.dto";
 
 @Component({
   selector: 'app-event-card',
-  imports: [CommonModule, DatePipe],
+  standalone: true,
+  imports: [CommonModule, RouterLink],
   templateUrl: './event-card.html',
-  styleUrl: './event-card.css',
-  standalone: true
+  styleUrl: './event-card.css'
 })
 export class EventCard {
   event = input.required<EventDetailsDto>();

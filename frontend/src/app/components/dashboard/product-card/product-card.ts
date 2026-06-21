@@ -1,10 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { Component, input } from '@angular/core';
 import { ProductDetailsDto } from "../../../core/models/product/product-details.dto";
+import { RouterLink } from "@angular/router";
 
 @Component({
   selector: 'app-product-card',
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink],
   templateUrl: './product-card.html',
   styleUrl: './product-card.css',
   standalone: true
