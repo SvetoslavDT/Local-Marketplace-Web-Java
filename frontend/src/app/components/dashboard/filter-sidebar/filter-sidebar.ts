@@ -1,5 +1,5 @@
 import {CommonModule} from '@angular/common';
-import {Component, output, signal} from '@angular/core';
+import {Component, EventEmitter, Output, signal} from '@angular/core';
 import { ProductType } from '../../../core/models/product/type';
 import { EventType } from '../../../core/models/event/type';
 import { EventFilters } from '../../../core/models/event/filters';
@@ -34,7 +34,8 @@ export class FilterSidebar {
   readonly productTypes = Object.values(ProductType);
   readonly eventTypes = Object.values(EventType);
 
-  search = output<SidebarSearchPayload>();
+  @Output()
+  search = new EventEmitter<SidebarSearchPayload>();
 
   setMode(value: SearchMode): void {
     this.mode.set(value);

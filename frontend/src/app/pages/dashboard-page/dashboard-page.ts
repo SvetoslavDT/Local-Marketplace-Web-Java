@@ -1,26 +1,43 @@
-import { Component } from '@angular/core';
+import { Component, signal, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { TopBar } from '../../components/dashboard/top-bar/top-bar';
+import { FilterSidebar } from '../../components/dashboard/filter-sidebar/filter-sidebar';
+import {SidebarSearch} from '../../core/models/sidebar-search.dto'
+import { ProductService } from "../../core/services/product/product";
+import { EventService } from "../../core/services/event/event";
+import { ProductCard } from '../../components/dashboard/product-card/product-card'
 
 @Component({
   selector: 'app-dashboard-page',
-  imports: [],
+  imports: [CommonModule,
+    TopBar,
+    FilterSidebar, ProductCard],
   templateUrl: './dashboard-page.html',
   styleUrl: './dashboard-page.css',
   standalone: true
 })
 export class DashboardPage {
-  username = 'Svetoslav';
-  isVendor = true;
-  cartItemCount = 3;
+  private productService = inject(ProductService);
+  private eventService = inject(EventService);
 
-  onPostProduct(): void {
-    console.log('Open post product form');
-  }
+  products = signal<any[]>([]);
+  events = signal<any[]>([]);
 
-  onOrders(): void {
-    console.log('Open orders page');
-  }
+  onSearch(search: SidebarSearch): void {
 
-  onCart(): void {
-    console.log('Open cart page');
+    if (search.mode === 'products' && search.productFilters) {
+
+      this.productService.getProducts(search.productFilters)
+        .subscribe(res => {
+          this.products.set(res.content);
+        });
+
+    } else if (search.mode === 'events' && search.eventFilters) {
+
+      this.eventService.getEvents(search.eventFilters)
+        .subscribe(res => {
+          this.events.set(res.content);
+        });
+    }
   }
 }

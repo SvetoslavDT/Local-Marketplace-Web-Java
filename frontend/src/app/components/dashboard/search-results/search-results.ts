@@ -5,5 +5,6 @@ import { Component } from '@angular/core';
   imports: [],
   templateUrl: './search-results.html',
   styleUrl: './search-results.css',
+  standalone: true
 })
 export class SearchResults {}

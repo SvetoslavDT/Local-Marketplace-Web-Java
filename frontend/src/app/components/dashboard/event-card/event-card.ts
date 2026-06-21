@@ -1,9 +1,16 @@
-import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Component, input } from '@angular/core';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-event-card',
-  imports: [],
+  imports: [CommonModule, DatePipe],
   templateUrl: './event-card.html',
   styleUrl: './event-card.css',
+  standalone: true
 })
-export class EventCard {}
+export class EventCard {
+
+  event = input<any>();
+
+}

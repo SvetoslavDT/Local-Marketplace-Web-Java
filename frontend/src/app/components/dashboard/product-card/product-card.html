@@ -1,1 +1,18 @@
-<p>product-card works!</p>
+<div class="card">
+
+  <div class="title">
+    {{ product().name }}
+  </div>
+
+  <div class="info">
+    <div>Type: {{ product().productType }}</div>
+    <div>Maker: {{ product().makerUsername }}</div>
+    <div>
+      Stock:
+      <span [class.in-stock]="product().quantity > 0">
+        {{ product().quantity > 0 ? 'In stock' : 'Out of stock' }}
+      </span>
+    </div>
+  </div>
+
+</div>

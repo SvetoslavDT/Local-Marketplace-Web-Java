@@ -1,1 +1,24 @@
-<p>event-card works!</p>
+<div class="card">
+
+  <div class="title">
+    {{ event().title }}
+  </div>
+
+  <div class="info">
+    <div>Type: {{ event().type }}</div>
+
+    <div>
+      Active:
+      <span [class.active]="event().active">
+        {{ event().active ? 'Yes' : 'No' }}
+      </span>
+    </div>
+
+    <div>
+      Start:
+      {{ event().startDate | date:'short' }}
+    </div>
+
+  </div>
+
+</div>
