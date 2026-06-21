@@ -9,7 +9,7 @@ import { ProductDetailsDto } from "../../models/product/product-details.dto";
 @Injectable({ providedIn: 'root' })
 export class ProductService {
 
-  private baseUrl = `${environment.apiUrl}/products`;
+  private readonly baseUrl = `${environment.apiUrl}/products`;
 
   constructor(private http: HttpClient) {}
 

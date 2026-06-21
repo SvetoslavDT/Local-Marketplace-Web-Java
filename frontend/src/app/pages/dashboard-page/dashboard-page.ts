@@ -24,23 +24,48 @@ export class DashboardPage {
   activeMode = signal<SearchMode>('products');
   products = signal<ProductDetailsDto[]>([]);
   events = signal<EventDetailsDto[]>([]);
+  loading = signal(false);
+  error = signal<string | null>(null);
 
   onSearch(payload: SidebarSearchPayload): void {
+
     this.activeMode.set(payload.mode);
+    this.loading.set(true);
+    this.error.set(null);
 
     if (payload.mode === 'products' && payload.productFilters) {
+
       this.events.set([]);
-      this.productService.searchProducts(payload.productFilters).subscribe(page => {
-        this.products.set(page.content);
+
+      this.productService.searchProducts(payload.productFilters).subscribe({
+        next: page => {
+          this.products.set(page.content);
+          this.loading.set(false);
+        },
+        error: () => {
+          this.loading.set(false);
+          this.error.set('Could not load products.');
+        }
       });
+
       return;
     }
 
     if (payload.mode === 'events' && payload.eventFilters) {
+
       this.products.set([]);
-      this.eventService.getEvents(payload.eventFilters).subscribe(page => {
-        this.events.set(page.content);
+
+      this.eventService.getEvents(payload.eventFilters).subscribe({
+        next: page => {
+          this.events.set(page.content);
+          this.loading.set(false);
+        },
+        error: () => {
+          this.loading.set(false);
+          this.error.set('Could not load events.');
+        }
       });
+
     }
   }
 }

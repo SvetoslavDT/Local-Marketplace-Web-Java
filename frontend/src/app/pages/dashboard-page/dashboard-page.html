@@ -7,7 +7,11 @@
       <p>What are you looking for today?</p>
     </div>
 
-    @if (activeMode() === 'products') {
+    @if (loading()) {
+      <div class="state">Loading...</div>
+    } @else if (error()) {
+      <div class="state error">{{ error() }}</div>
+    } @else if (activeMode() === 'products') {
       <div class="grid">
         @for (p of products(); track p.id) {
           <app-product-card [product]="p"></app-product-card>
