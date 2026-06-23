@@ -1,0 +1,37 @@
+<div class="page">
+  <a class="back-link" routerLink="/dashboard">← Back to dashboard</a>
+
+  <div class="header">
+    <h1>My products</h1>
+    <p>{{ username() }}</p>
+  </div>
+
+  @if (loading()) {
+    <div class="state">Loading...</div>
+  } @else if (error()) {
+    <div class="state error">{{ error() }}</div>
+  } @else {
+    <div class="grid">
+      @for (p of products(); track p.id) {
+        <app-product-card [product]="p"></app-product-card>
+      }
+    </div>
+
+    <div class="pager">
+      <button mat-button type="button" (click)="prev()" [disabled]="page() === 0">
+        Previous
+      </button>
+
+      <span>{{ page() + 1 }} / {{ totalPages() || 1 }}</span>
+
+      <button
+        mat-button
+        type="button"
+        (click)="next()"
+        [disabled]="page() >= totalPages() - 1"
+      >
+        Next
+      </button>
+    </div>
+  }
+</div>

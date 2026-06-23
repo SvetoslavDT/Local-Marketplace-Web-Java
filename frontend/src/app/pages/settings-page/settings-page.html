@@ -1,1 +1,69 @@
-<p>settings-page works!</p>
+<div class="settings-page">
+  <div class="settings-card">
+    @if (!editing()) {
+      <div class="view-mode">
+        <div class="row">
+          <span>Username</span>
+          <strong>{{ username() }}</strong>
+        </div>
+
+        <div class="row">
+          <span>Email</span>
+          <strong>{{ email() }}</strong>
+        </div>
+
+        <label class="vendor-row">
+          <input
+            type="checkbox"
+            [checked]="isVendor()"
+            [disabled]="isVendor()"
+            (change)="!isVendor() && becomeVendor()"
+          />
+          <span>Make me a vendor</span>
+        </label>
+
+        <div class="actions">
+          <button mat-icon-button color="primary" (click)="startEdit()">
+            <mat-icon>edit</mat-icon>
+          </button>
+
+          <button mat-icon-button color="warn" (click)="deleteProfile()">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </div>
+    } @else {
+      <form class="edit-mode" [formGroup]="form">
+        <div class="row">
+          <span>Username</span>
+          <strong>{{ username() }}</strong>
+        </div>
+
+        <mat-form-field appearance="outline">
+          <mat-label>New email</mat-label>
+          <input matInput formControlName="email" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>New phone number</mat-label>
+          <input matInput formControlName="phone" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>New password</mat-label>
+          <input matInput type="password" formControlName="password" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Repeat new password</mat-label>
+          <input matInput type="password" formControlName="repeatPassword" />
+        </mat-form-field>
+
+        <div class="actions">
+          <button mat-button type="button" (click)="cancelEdit()">Cancel</button>
+          <button mat-button type="button" (click)="save()">Save</button>
+        </div>
+      </form>
+    }
+  </div>
+</div>

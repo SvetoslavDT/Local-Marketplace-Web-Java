@@ -1,0 +1,48 @@
+.page {
+  min-height: 100vh;
+  background: #edf3f8;
+  padding: 24px;
+  box-sizing: border-box;
+}
+
+.back-link {
+  display: inline-block;
+  margin-bottom: 18px;
+  color: #1e3a5f;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.header h1 {
+  margin: 0;
+  color: #1e3a5f;
+}
+
+.header p {
+  margin: 6px 0 20px;
+  color: #486581;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+.state {
+  background: #fff;
+  border-radius: 18px;
+  padding: 18px;
+}
+
+.state.error {
+  color: #b00020;
+}
+
+.pager {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 22px;
+}

@@ -13,8 +13,10 @@ export class ProductService {
 
   constructor(private http: HttpClient) {}
 
-  searchProducts(filters: ProductFilters): Observable<PageResponse<ProductDetailsDto>> {
-    let params = new HttpParams();
+  searchProducts(filters: ProductFilters, page = 0, size = 12): Observable<PageResponse<ProductDetailsDto>> {
+    let params = new HttpParams()
+      .set('page', page)
+      .set('size', size);
 
     filters.productTypes.forEach(type => {
       params = params.append('productTypes', type);
