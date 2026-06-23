@@ -17,9 +17,15 @@
   gap: 12px;
 }
 
-.username {
+.username-btn {
+  color: white;
   font-size: 18px;
   font-weight: 600;
+}
+
+.cart-badge {
+  margin-left: 6px;
+  font-size: 12px;
 }
 
 .post-product-btn,

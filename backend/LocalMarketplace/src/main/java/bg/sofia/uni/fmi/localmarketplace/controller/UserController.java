@@ -28,6 +28,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.security.Principal;
+
 @RestController
 @RequestMapping("/api/users")
 @Tag(name = "User Management", description = "Endpoints for managing users in the local marketplace")
@@ -94,7 +96,7 @@ public class UserController {
         return ResponseEntity.ok(userService.updateUser(username, updateUserDTO));
     }
 
-    @PatchMapping("/{username}/become-vendor")
+    @PatchMapping("/become-vendor")
     @Operation(summary = "Make a user vendor", description = "Makes the user able to sell products")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "User updated successfully"),
@@ -102,12 +104,10 @@ public class UserController {
         @ApiResponse(responseCode = "404", description = "User with username not found."),
         @ApiResponse(responseCode = "500", description = "Internal server error.")
     })
-    public ResponseEntity<String> becomeVendor(
-        @Parameter(description = "The unique username of the user to be updated", required = true)
-        @PathVariable String username) {
+    public ResponseEntity<String> becomeVendor(@Parameter(hidden = true) Principal principal) {
 
-        userService.makeUserVendor(username);
-        return ResponseEntity.ok("The user is already a Vendor. Please generate a new JWT token.");
+        userService.makeUserVendor(principal.getName());
+        return ResponseEntity.ok("The user is a Vendor. Please generate a new JWT token.");
     }
 
     @DeleteMapping("/{username}")
