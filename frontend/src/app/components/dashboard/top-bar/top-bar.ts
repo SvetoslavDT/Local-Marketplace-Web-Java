@@ -1,13 +1,15 @@
 import { CommonModule } from '@angular/common';
 import { Component, input, output } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatBadgeModule } from '@angular/material/badge';
+import { MatMenuModule } from '@angular/material/menu';
 
 @Component({
   selector: 'app-top-bar',
   standalone: true,
-  imports: [CommonModule, MatBadgeModule, MatButtonModule, MatIconModule],
+  imports: [CommonModule, MatBadgeModule, MatButtonModule, MatIconModule, MatMenuModule, RouterLink],
   templateUrl: './top-bar.html',
   styleUrl: './top-bar.css',
 })
@@ -16,12 +18,13 @@ export class TopBar {
   isVendor = input<boolean>(false);
   cartItemCount = input<number>(0);
 
-  postProduct = output<void>();
   ordersClick = output<void>();
   cartClick = output<void>();
 
-  onPostProduct(): void {
-    this.postProduct.emit();
+  logoutClick = output<void>();
+
+  onLogout(): void {
+    this.logoutClick().emit();
   }
 
   onOrders(): void {

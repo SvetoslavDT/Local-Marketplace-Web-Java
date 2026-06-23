@@ -17,4 +17,19 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./pages/event-details-page/event-details-page').then(m => m.EventDetailsPage),
   },
+  {
+    path: 'settings',
+    loadComponent: () =>
+      import('./pages/settings-page/settings-page').then(m => m.SettingsPage),
+  },
+  {
+    path: 'settings/:username',
+    loadComponent: () =>
+      import('./pages/settings-page/settings-page').then(m => m.SettingsPage),
+  },
+  {
+    path: 'my-products/:username',
+    loadComponent: () =>
+      import('./pages/my-products-page/my-products-page').then(m => m.MyProductsPage),
+  },
 ];

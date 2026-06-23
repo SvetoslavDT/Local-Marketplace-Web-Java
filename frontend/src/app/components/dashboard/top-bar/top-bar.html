@@ -1,22 +1,18 @@
 <div class="top-bar">
-  <!-- LEFT SIDE -->
   <div class="left-side">
-    <div class="username">
-      {{ username() }}
-    </div>
-
-    @if (isVendor()) {
-      <button
-        mat-button
-        class="post-product-btn"
-        (click)="onPostProduct()"
-      >
-        Post product
+    <div class="username-wrap">
+      <button mat-button [matMenuTriggerFor]="userMenu" class="username-btn">
+        <span>{{ username() }}</span>
+        <mat-icon>expand_more</mat-icon>
       </button>
-    }
+
+      <mat-menu #userMenu="matMenu">
+        <button mat-menu-item routerLink="/settings">Settings</button>
+        <button mat-menu-item (click)="onLogout()">Logout</button>
+      </mat-menu>
+    </div>
   </div>
 
-  <!-- RIGHT SIDE -->
   <div class="right-side">
     <button
       mat-button
