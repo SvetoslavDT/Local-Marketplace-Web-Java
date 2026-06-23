@@ -13,6 +13,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 public interface ProductService {
 
     /**
@@ -35,12 +37,14 @@ public interface ProductService {
     /**
      * Retrieves a paginated page of products optionally filtered by type and maker
      *
-     * @param productType the type of the product
+     * @param productTypes   the types of the products to get
      * @param makerUsername the username of the maker
-     * @param pageable pagination and sorting details for the products
+     * @param inStock       true if product is in stock, otherwise false
+     * @param pageable      pagination and sorting details for the products
      * @return a page of product responses
      */
-    Page<ProductDetailsDTO> getProductsWithFilters(ProductType productType, String makerUsername, Pageable pageable);
+    Page<ProductDetailsDTO> getProductsWithFilters(List<ProductType> productTypes, String makerUsername,
+                                                   Boolean inStock, Pageable pageable);
 
     /**
      * Uploads or replaces the product picture for the specified product.
@@ -49,9 +53,9 @@ public interface ProductService {
      * it will be replaced.
      *
      * @param productId the unique identifier of the product whose picture will be set
-     * @param picture the image file to be uploaded (must be a valid JPG file)
-     * @throws IllegalArgumentException if the picture is null or empty
-     * @throws InvalidFileFormatException if the provided file is not a valid JPG image
+     * @param picture   the image file to be uploaded (must be a valid JPG file)
+     * @throws IllegalArgumentException     if the picture is null or empty
+     * @throws InvalidFileFormatException   if the provided file is not a valid JPG image
      * @throws ProductDoesNotExistException if no product exists with the given id
      */
     void setProductPicture(Long productId, MultipartFile picture);

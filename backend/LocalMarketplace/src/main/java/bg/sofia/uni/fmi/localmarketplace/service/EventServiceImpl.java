@@ -19,6 +19,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @Transactional
 public class EventServiceImpl implements EventService {
@@ -66,17 +68,17 @@ public class EventServiceImpl implements EventService {
 
     @Override
     @Transactional(readOnly = true)
-    public Page<EventDetailsDTO> getAllEvents(EventType type, Boolean active, Pageable pageable) {
-        if (type != null && active != null) {
-            return eventRepository.findByTypeAndActive(type, active, pageable).map(EventDetailsDTO::from);
-        }
-        if (type != null) {
-            return eventRepository.findByType(type, pageable).map(EventDetailsDTO::from);
-        }
-        if (active != null) {
-            return eventRepository.findByActive(active, pageable).map(EventDetailsDTO::from);
-        }
-        return eventRepository.findAll(pageable).map(EventDetailsDTO::from);
+    public Page<EventDetailsDTO> getAllEvents(List<EventType> types, Boolean active, Boolean upcoming,
+                                              Pageable pageable) {
+
+        Page<Event> page = eventRepository.findEventsWithFilters(
+            types,
+            active,
+            upcoming,
+            pageable
+        );
+
+        return page.map(EventDetailsDTO::from);
     }
 
     @Override
@@ -97,7 +99,7 @@ public class EventServiceImpl implements EventService {
 
     private void validateMergedDates(Event event) {
         if (event.getStartDate() != null && event.getEndDate() != null
-                && !event.getEndDate().isAfter(event.getStartDate())) {
+            && !event.getEndDate().isAfter(event.getStartDate())) {
             throw new InvalidEventDataException(ValidationConstants.Event.END_DATE_BEFORE_START_DATE);
         }
     }

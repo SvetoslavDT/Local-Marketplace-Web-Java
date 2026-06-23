@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.security.Principal;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/events")
@@ -46,17 +47,26 @@ public class EventController {
     @Operation(summary = "List events",
         description = "Returns a paginated list of all events. "
             + "Optionally filter by ?type= (CRAFT_FAIRS, PROMOTIONAL_CAMPAIGNS, STORYTELLING_FEATURES) "
-            + "and/or ?active= (true/false). Both filters may be combined.")
+            + "and/or ?active= (true/false) and/or upcoming. Both filters may be combined.")
     @ApiResponses({
         @ApiResponse(responseCode = "200", description = "Events retrieved successfully")
     })
     public ResponseEntity<Page<EventDetailsDTO>> getAllEvents(
-        @Parameter(description = "Filter by event type")
-        @RequestParam(required = false) EventType type,
-        @Parameter(description = "Filter by active status")
-        @RequestParam(required = false) Boolean active,
-        @PageableDefault(size = 20) Pageable pageable) {
-        return ResponseEntity.ok(eventService.getAllEvents(type, active, pageable));
+
+        @RequestParam(name = "types", required = false)
+        List<EventType> types,
+
+        @RequestParam(required = false)
+        Boolean active,
+
+        @RequestParam(required = false)
+        Boolean upcoming,
+
+        @PageableDefault(size = 20) Pageable pageable
+    ) {
+        return ResponseEntity.ok(
+            eventService.getAllEvents(types, active, upcoming, pageable)
+        );
     }
 
     @GetMapping("/{id}")

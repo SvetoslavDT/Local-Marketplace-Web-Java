@@ -1,0 +1,22 @@
+<a class="entity-card" [routerLink]="['/products', product().id]">
+  <div class="image-box">
+    @if (product().imageUrl) {
+      <img
+        class="product-image"
+        [src]="product().imageUrl!"
+        [alt]="product().name"
+      />
+    } @else {
+      <div class="image-placeholder">No image</div>
+    }
+  </div>
+
+  <div class="content">
+    <div class="name">{{ product().name }}</div>
+
+    <div class="meta">
+      <span class="price">Price: {{ formatPrice(product().price) }}</span>
+      <span class="quantity">Qty: {{ product().quantity }}</span>
+    </div>
+  </div>
+</a>

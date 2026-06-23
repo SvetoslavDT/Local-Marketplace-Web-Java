@@ -1,0 +1,97 @@
+<div class="sidebar">
+  <div class="title">Search filters</div>
+
+  <div class="mode-section">
+    <label class="radio-item">
+      <input
+        type="radio"
+        name="searchMode"
+        [checked]="mode() === 'products'"
+        (change)="setMode('products')"
+      />
+      <span>Products</span>
+    </label>
+
+    <label class="radio-item">
+      <input
+        type="radio"
+        name="searchMode"
+        [checked]="mode() === 'events'"
+        (change)="setMode('events')"
+      />
+      <span>Events</span>
+    </label>
+  </div>
+
+  @if (mode() === 'products') {
+    <div class="filters-group">
+      <div class="group-title">Product type</div>
+
+      @for (type of productTypes; track type) {
+        <label class="checkbox-item">
+          <input
+            type="checkbox"
+            [checked]="selectedProductTypes().includes(type)"
+            (change)="toggleProductType(type)"
+          />
+          <span>{{ labelFromEnum(type) }}</span>
+        </label>
+      }
+
+      <div class="group-title">Maker username</div>
+      <input
+        class="text-input"
+        type="text"
+        placeholder="Enter username"
+        [value]="makerUsername()"
+        (input)="onMakerUsernameInput($event)"
+      />
+
+      <label class="checkbox-item">
+        <input
+          type="checkbox"
+          [checked]="inStockOnly()"
+          (change)="toggleInStockOnly()"
+        />
+        <span>In stock only</span>
+      </label>
+    </div>
+  } @else {
+    <div class="filters-group">
+      <label class="checkbox-item">
+        <input
+          type="checkbox"
+          [checked]="upcomingOnly()"
+          (change)="toggleUpcomingOnly()"
+        />
+        <span>Upcoming only</span>
+      </label>
+
+      <label class="checkbox-item">
+        <input
+          type="checkbox"
+          [checked]="activeOnly()"
+          (change)="toggleActiveOnly()"
+        />
+        <span>Active only</span>
+      </label>
+
+      <div class="group-title">Event type</div>
+
+      @for (type of eventTypes; track type) {
+        <label class="checkbox-item">
+          <input
+            type="checkbox"
+            [checked]="selectedEventTypes().includes(type)"
+            (change)="toggleEventType(type)"
+          />
+          <span>{{ labelFromEnum(type) }}</span>
+        </label>
+      }
+    </div>
+  }
+
+  <button class="search-btn" type="button" (click)="runSearch()">
+    Search
+  </button>
+</div>

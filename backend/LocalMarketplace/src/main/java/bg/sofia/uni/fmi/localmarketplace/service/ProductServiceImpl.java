@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.file.Path;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -50,19 +51,22 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Page<ProductDetailsDTO> getProductsWithFilters(ProductType productType, String makerUsername,
-                                                          Pageable pageable) {
-        Page<Product> page;
+    public Page<ProductDetailsDTO> getProductsWithFilters(
+        List<ProductType> productTypes, String makerUsername, Boolean inStock, Pageable pageable) {
 
-        if (productType != null && makerUsername != null && !makerUsername.isBlank()) {
-            page = productRepository.findByProductTypeAndMaker_Username(productType, makerUsername, pageable);
-        } else if (productType != null) {
-            page = productRepository.findByProductType(productType, pageable);
-        } else if (makerUsername != null && !makerUsername.isBlank()) {
-            page = productRepository.findByMakerUsername(makerUsername, pageable);
-        } else {
-            page = productRepository.findAll(pageable);
+        if (productTypes != null && productTypes.isEmpty()) {
+            productTypes = null;
         }
+
+        String sanitizedUsername =
+            (makerUsername != null && !makerUsername.isBlank())
+                ? makerUsername
+                : null;
+
+        Page<Product> page = productRepository.findProductsWithFilters(productTypes, sanitizedUsername,
+            inStock,
+            pageable
+        );
 
         return page.map(ProductDetailsDTO::from);
     }

@@ -11,6 +11,8 @@ import bg.sofia.uni.fmi.localmarketplace.vo.EventType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
+
 public interface EventService {
 
     /**
@@ -38,12 +40,13 @@ public interface EventService {
     /**
      * Returns a paginated list of all events, optionally filtered by type and/or active status.
      *
-     * @param type     when non-null, only events of this type are returned
+     * @param types    when non-null, only events of these types are returned
      * @param active   when non-null, only events matching this active flag are returned
+     * @param upcoming the boolean whether to get upcoming events or not
      * @param pageable pagination and sorting parameters
      * @return page of {@link EventDetailsDTO}
      */
-    Page<EventDetailsDTO> getAllEvents(EventType type, Boolean active, Pageable pageable);
+    Page<EventDetailsDTO> getAllEvents(List<EventType> types, Boolean active, Boolean upcoming , Pageable pageable);
 
     /**
      * Updates an existing event. Only the owner (or an admin) may update. Null fields in {@code dto} are ignored.

@@ -40,6 +40,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.security.Principal;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/products")
@@ -80,15 +81,25 @@ public class ProductController {
     })
     @GetMapping
     public ResponseEntity<Page<ProductDetailsDTO>> getProducts(
-        @Parameter(description = "Filter by type of the product")
-        @RequestParam(name = "product_type", required = false) ProductType productType,
 
-        @Parameter(description = "Filter by the unique username of the maker")
-        @RequestParam(name = "maker_username", required = false) String makerUsername,
+        @Parameter(description = "Filter by product types")
+        @RequestParam(name = "productTypes", required = false)
+        List<ProductType> productTypes,
 
-        @PageableDefault(size = 12, sort = "id") Pageable pageable) {
+        @Parameter(description = "Filter by maker username")
+        @RequestParam(name = "makerUsername", required = false)
+        String makerUsername,
 
-        Page<ProductDetailsDTO> products = productService.getProductsWithFilters(productType, makerUsername, pageable);
+        @Parameter(description = "Filter by stock availability")
+        @RequestParam(name = "inStock", required = false)
+        Boolean inStock,
+
+        @PageableDefault(size = 12, sort = "id") Pageable pageable
+    ) {
+
+        Page<ProductDetailsDTO> products =
+            productService.getProductsWithFilters(productTypes, makerUsername, inStock, pageable);
+
         return ResponseEntity.ok(products);
     }
 
