@@ -1,0 +1,5 @@
+{
+  "/api": { "target": "http://localhost:9090", "secure": false, "changeOrigin": true },
+  "/auth": { "target": "http://localhost:9090", "secure": false, "changeOrigin": true },
+  "/files": { "target": "http://localhost:9090", "secure": false, "changeOrigin": true }
+}

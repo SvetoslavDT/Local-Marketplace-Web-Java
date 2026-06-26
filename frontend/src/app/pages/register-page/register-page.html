@@ -1,0 +1,73 @@
+<div class="auth-page">
+  <div class="auth-card">
+    <h1 class="auth-title">Create Account</h1>
+
+    <form class="auth-form" [formGroup]="form" (ngSubmit)="submit()">
+      <div class="auth-row">
+        <mat-form-field appearance="outline">
+          <mat-label>First Name</mat-label>
+          <input matInput formControlName="firstName" />
+          @if (form.get('firstName')?.invalid && form.get('firstName')?.touched) {
+            <mat-error>First name is required.</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Last Name</mat-label>
+          <input matInput formControlName="lastName" />
+          @if (form.get('lastName')?.invalid && form.get('lastName')?.touched) {
+            <mat-error>Last name is required.</mat-error>
+          }
+        </mat-form-field>
+      </div>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Username</mat-label>
+        <input matInput formControlName="username" autocomplete="username" />
+        @if (form.get('username')?.invalid && form.get('username')?.touched) {
+          <mat-error>Username is required.</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Email</mat-label>
+        <input matInput type="email" formControlName="email" autocomplete="email" />
+        @if (form.get('email')?.hasError('required') && form.get('email')?.touched) {
+          <mat-error>Email is required.</mat-error>
+        } @else if (form.get('email')?.hasError('email') && form.get('email')?.touched) {
+          <mat-error>Enter a valid email address.</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Phone</mat-label>
+        <input matInput type="tel" formControlName="phone" placeholder="+359123456789" />
+        @if (form.get('phone')?.invalid && form.get('phone')?.touched) {
+          <mat-error>Phone is required.</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Password</mat-label>
+        <input matInput type="password" formControlName="password" autocomplete="new-password" />
+        @if (form.get('password')?.hasError('required') && form.get('password')?.touched) {
+          <mat-error>Password is required.</mat-error>
+        } @else if (form.get('password')?.hasError('minlength') && form.get('password')?.touched) {
+          <mat-error>Password must be at least 6 characters.</mat-error>
+        } @else if (form.get('password')?.hasError('maxlength') && form.get('password')?.touched) {
+          <mat-error>Password must be at most 50 characters.</mat-error>
+        }
+      </mat-form-field>
+
+      @if (errorMsg()) {
+        <p class="auth-error">{{ errorMsg() }}</p>
+      }
+
+      <button mat-flat-button color="primary" type="submit" [disabled]="loading()">
+        {{ loading() ? 'Creating account…' : 'Create Account' }}
+      </button>
+    </form>
+
+    <p class="auth-link">Already have an account? <a routerLink="/login">Sign in</a></p>
+  </div>
+</div>

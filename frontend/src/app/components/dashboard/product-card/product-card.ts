@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component, input } from '@angular/core';
+import { Component, inject, input } from '@angular/core';
 import { ProductDetailsDto } from "../../../core/models/product/product-details.dto";
 import { RouterLink } from "@angular/router";
+import { CartService } from '../../../core/services/cart/cart-service';
 
 @Component({
   selector: 'app-product-card',
@@ -11,6 +12,7 @@ import { RouterLink } from "@angular/router";
   standalone: true
 })
 export class ProductCard {
+  private readonly cartService = inject(CartService);
 
   product = input.required<ProductDetailsDto>();
 
@@ -20,6 +22,10 @@ export class ProductCard {
       currency: 'EUR',
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
-    }).format(value);
+    }).format(value / 100);
+  }
+
+  onAddToCart(): void {
+    this.cartService.addItem(this.product().id, 1).subscribe({ error: () => {} });
   }
 }

@@ -58,7 +58,7 @@ public interface ProductService {
      * @throws InvalidFileFormatException   if the provided file is not a valid JPG image
      * @throws ProductDoesNotExistException if no product exists with the given id
      */
-    void setProductPicture(Long productId, MultipartFile picture);
+    void setProductPicture(Long productId, String username, MultipartFile picture);
 
     /**
      * Creates a new artisan product and assigns it to the current logged-in user.

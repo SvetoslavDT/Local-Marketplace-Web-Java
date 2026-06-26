@@ -9,22 +9,61 @@
     <div class="hero">
       <div class="hero-info">
         <h1>{{ event()!.title }}</h1>
-        <div class="hero-line">Start: {{ formatDate(event()!.startDate) }}</div>
-        <div class="hero-line">End: {{ formatDate(event()!.endDate) }}</div>
+        <div class="hero-line">Type: {{ formatKey(event()!.type) }}</div>
+        <div class="hero-line">Owner: {{ event()!.ownerUsername }}</div>
+        @if (event()!.type === TYPE_CRAFT_FAIRS) {
+          @if (event()!.location) {
+            <div class="hero-line">Location: {{ event()!.location }}</div>
+          }
+          @if (event()!.startDate) {
+            <div class="hero-line">Start: {{ formatDate(event()!.startDate!) }}</div>
+          }
+          @if (event()!.endDate) {
+            <div class="hero-line">End: {{ formatDate(event()!.endDate!) }}</div>
+          }
+        } @else if (event()!.type === TYPE_PROMOTIONAL_CAMPAIGNS) {
+          @if (event()!.discountType) {
+            <div class="hero-line">Discount: {{ event()!.discountType }}</div>
+          }
+          @if (event()!.discountValue != null) {
+            <div class="hero-line">Value: {{ formatValue('discountValue', event()!.discountValue) }}</div>
+          }
+          @if (event()!.startDate) {
+            <div class="hero-line">Start: {{ formatDate(event()!.startDate!) }}</div>
+          }
+          @if (event()!.endDate) {
+            <div class="hero-line">End: {{ formatDate(event()!.endDate!) }}</div>
+          }
+        } @else if (event()!.type === TYPE_STORYTELLING_FEATURES) {
+          @if (event()!.content) {
+            <div class="hero-line content-block">{{ event()!.content }}</div>
+          }
+        }
       </div>
     </div>
 
     <div class="details-card">
-      <div class="section-title">Full event details</div>
-
+      <div class="section-title">Core details</div>
       <div class="rows">
-        @for (entry of entries(); track entry[0]) {
+        @for (entry of coreEntries(); track entry[0]) {
           <div class="row">
             <div class="key">{{ formatKey(entry[0]) }}</div>
-            <div class="value">{{ formatValue(entry[1]) }}</div>
+            <div class="value">{{ formatValue(entry[0], entry[1]) }}</div>
           </div>
         }
       </div>
+
+      @if (typeEntries().length) {
+        <div class="section-title type-section">Type-specific details</div>
+        <div class="rows">
+          @for (entry of typeEntries(); track entry[0]) {
+            <div class="row">
+              <div class="key">{{ formatKey(entry[0]) }}</div>
+              <div class="value">{{ formatValue(entry[0], entry[1]) }}</div>
+            </div>
+          }
+        </div>
+      }
     </div>
   }
 </div>

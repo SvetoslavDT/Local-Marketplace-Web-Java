@@ -80,3 +80,14 @@
   color: #102a43;
   word-break: break-word;
 }
+
+.type-section {
+  margin-top: 22px;
+}
+
+.content-block {
+  white-space: pre-wrap;
+  font-size: 15px;
+  color: #334e68;
+  margin-top: 8px;
+}

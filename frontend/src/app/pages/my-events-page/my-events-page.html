@@ -1,0 +1,179 @@
+<div class="page">
+  <a class="back-link" routerLink="/dashboard">← Back to dashboard</a>
+
+  <div class="page-header">
+    <h2>Events</h2>
+    <button class="btn-primary" type="button" (click)="openCreate()">+ Create Event</button>
+  </div>
+
+  @if (error()) {
+    <div class="state-msg error">{{ error() }}</div>
+  }
+
+  @if (loading()) {
+    <div class="state-msg">Loading...</div>
+  } @else if (events().length === 0 && !error()) {
+    <div class="state-msg">No events found.</div>
+  } @else {
+    <div class="event-list">
+      @for (e of events(); track e.id) {
+        <div class="event-card">
+          <div class="card-body">
+            <div class="card-top">
+              <a class="event-title" [routerLink]="['/events', e.id]">{{ e.title }}</a>
+              <span class="badge" [ngClass]="typeBadgeClass(e.type)">{{ formatType(e.type) }}</span>
+              <span class="badge" [ngClass]="e.active ? 'badge-active' : 'badge-inactive'">
+                {{ e.active ? 'Active' : 'Inactive' }}
+              </span>
+            </div>
+
+            @if (e.description) {
+              <div class="event-desc">{{ e.description }}</div>
+            }
+
+            @if (e.type === EventType.CRAFT_FAIRS && e.location) {
+              <div class="event-meta">
+                📍 {{ e.location }} &nbsp;|&nbsp; {{ formatDate(e.startDate) }} → {{ formatDate(e.endDate) }}
+              </div>
+            }
+
+            @if (e.type === EventType.PROMOTIONAL_CAMPAIGNS) {
+              <div class="event-meta">
+                Discount: {{ formatDiscount(e) }}
+                @if (e.startDate) {
+                  &nbsp;|&nbsp; {{ formatDate(e.startDate) }} → {{ formatDate(e.endDate) }}
+                }
+              </div>
+            }
+
+            @if (e.type === EventType.STORYTELLING_FEATURES && e.content) {
+              <div class="event-meta">{{ e.content.length > 120 ? (e.content | slice:0:120) + '…' : e.content }}</div>
+            }
+
+            <div class="event-owner">by {{ e.ownerUsername }}</div>
+          </div>
+
+          @if (isOwner(e)) {
+            <div class="card-actions">
+              <button class="btn-edit" type="button" (click)="openEdit(e)">Edit</button>
+              <button class="btn-delete" type="button" (click)="deleteEvent(e)">Delete</button>
+            </div>
+          }
+        </div>
+      }
+    </div>
+  }
+
+  @if (showForm()) {
+    <div class="form-panel" #formPanel>
+      <div class="form-panel-header">
+        <span class="form-panel-title">{{ editingId() != null ? 'Edit Event' : 'Create Event' }}</span>
+        <button class="btn-cancel-form" type="button" (click)="closeForm()">Cancel</button>
+      </div>
+
+      <div class="form-body">
+        @if (formError()) {
+          <div class="form-error">{{ formError() }}</div>
+        }
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="field-label">Title *</label>
+            <input class="field-input" type="text" maxlength="255" [value]="form().title"
+              (input)="updateField('title', $any($event.target).value)" />
+          </div>
+          <div class="form-group">
+            <label class="field-label">Type *</label>
+            <select class="field-select" [value]="form().type" (change)="onTypeChange($any($event.target).value)"
+              [disabled]="editingId() != null">
+              <option value="">— select type —</option>
+              <option value="CRAFT_FAIRS">Craft Fair</option>
+              <option value="PROMOTIONAL_CAMPAIGNS">Promotional Campaign</option>
+              <option value="STORYTELLING_FEATURES">Storytelling Feature</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="field-label">Description</label>
+          <textarea class="field-textarea" maxlength="1000" [value]="form().description"
+            (input)="updateField('description', $any($event.target).value)"></textarea>
+        </div>
+
+        <label class="field-label checkbox-label">
+          <input type="checkbox" [checked]="form().active"
+            (change)="updateField('active', $any($event.target).checked)" />
+          Active
+        </label>
+
+        @if (isCraftFair) {
+          <div class="form-group">
+            <label class="field-label">Location *</label>
+            <input class="field-input" type="text" [value]="form().location"
+              (input)="updateField('location', $any($event.target).value)" />
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="field-label">Start Date *</label>
+              <input class="field-input" type="datetime-local" [value]="form().startDate"
+                (change)="updateField('startDate', $any($event.target).value)" />
+            </div>
+            <div class="form-group">
+              <label class="field-label">End Date *</label>
+              <input class="field-input" type="datetime-local" [value]="form().endDate"
+                (change)="updateField('endDate', $any($event.target).value)" />
+            </div>
+          </div>
+        }
+
+        @if (isPromo) {
+          <div class="form-row">
+            <div class="form-group">
+              <label class="field-label">Discount Type *</label>
+              <select class="field-select" [value]="form().discountType"
+                (change)="updateField('discountType', $any($event.target).value)">
+                <option value="">— select —</option>
+                <option value="PERCENTAGE">Percentage</option>
+                <option value="FIXED_AMOUNT">Fixed Amount</option>
+                <option value="FREE_SHIPPING">Free Shipping</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="field-label">Discount Value *</label>
+              <input class="field-input" type="number" min="0" step="0.01"
+                [value]="form().discountValueInput"
+                (input)="updateField('discountValueInput', $any($event.target).value)"
+                placeholder="e.g. 10.00" />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="field-label">Start Date *</label>
+              <input class="field-input" type="datetime-local" [value]="form().startDate"
+                (change)="updateField('startDate', $any($event.target).value)" />
+            </div>
+            <div class="form-group">
+              <label class="field-label">End Date *</label>
+              <input class="field-input" type="datetime-local" [value]="form().endDate"
+                (change)="updateField('endDate', $any($event.target).value)" />
+            </div>
+          </div>
+        }
+
+        @if (isStorytelling) {
+          <div class="form-group">
+            <label class="field-label">Content *</label>
+            <textarea class="field-textarea tall" [value]="form().content"
+              (input)="updateField('content', $any($event.target).value)"></textarea>
+          </div>
+        }
+
+        <div class="form-footer">
+          <button class="btn-primary" type="button" [disabled]="formSaving()" (click)="save()">
+            {{ formSaving() ? 'Saving…' : (editingId() != null ? 'Save Changes' : 'Create') }}
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+</div>

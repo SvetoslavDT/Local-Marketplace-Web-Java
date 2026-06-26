@@ -1,0 +1,55 @@
+<div class="page">
+  <a class="back-link" routerLink="/cart">← Back to cart</a>
+
+  <div class="header">
+    <h1>Checkout</h1>
+  </div>
+
+  @if (error()) {
+    <div class="state error">{{ error() }}</div>
+  }
+
+  @if (!cart() || cart()!.items.length === 0) {
+    <div class="state empty">
+      Your cart is empty. <a routerLink="/dashboard">Continue shopping</a>.
+    </div>
+  } @else {
+    <div class="checkout-layout">
+      <div class="cart-summary card">
+        <h2>Order summary</h2>
+        <div class="summary-table">
+          <div class="summary-head">
+            <span>Product</span>
+            <span>Qty</span>
+            <span>Subtotal</span>
+          </div>
+          @for (item of cart()!.items; track item.id) {
+            <div class="summary-row">
+              <span class="product-name">{{ item.product.name }}</span>
+              <span class="cell">{{ item.quantity }}</span>
+              <span class="cell subtotal">EUR {{ formatPrice(item.subtotal) }}</span>
+            </div>
+          }
+        </div>
+        <div class="cart-total">
+          Total: <strong>EUR {{ formatPrice(cart()!.total) }}</strong>
+        </div>
+      </div>
+
+      <div class="options card">
+        <h2>Payment options</h2>
+
+        <div class="currency-badge">Currency: <strong>EUR</strong></div>
+
+        <button
+          class="btn-confirm"
+          type="button"
+          [disabled]="loading()"
+          (click)="onConfirm()"
+        >
+          {{ loading() ? 'Placing order…' : 'Confirm order' }}
+        </button>
+      </div>
+    </div>
+  }
+</div>

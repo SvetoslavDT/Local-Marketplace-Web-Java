@@ -1,9 +1,11 @@
 import {CommonModule} from '@angular/common';
-import {Component, EventEmitter, Output, signal, output} from '@angular/core';
+import {Component, EventEmitter, Output, inject, signal} from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ProductType } from '../../../core/models/product/type';
 import { EventType } from '../../../core/models/event/type';
 import { EventFilters } from '../../../core/models/event/filters';
 import { ProductFilters } from '../../../core/models/product/filters';
+import { SearchCoordinator } from '../../../core/services/search/search-coordinator';
 
 type SearchMode = 'events' | 'products';
 
@@ -22,6 +24,26 @@ export interface SidebarSearchPayload {
 })
 export class FilterSidebar {
   mode = signal<SearchMode>('products');
+
+  constructor() {
+    const coordinator = inject(SearchCoordinator);
+
+    coordinator.modeRequested$
+      .pipe(takeUntilDestroyed())
+      .subscribe(mode => this.mode.set(mode));
+
+    coordinator.resetRequested$
+      .pipe(takeUntilDestroyed())
+      .subscribe(() => {
+        this.mode.set('products');
+        this.selectedProductTypes.set([]);
+        this.makerUsername.set('');
+        this.inStockOnly.set(false);
+        this.selectedEventTypes.set([]);
+        this.activeOnly.set(false);
+        this.upcomingOnly.set(false);
+      });
+  }
 
   selectedProductTypes = signal<ProductType[]>([]);
   makerUsername = signal('');

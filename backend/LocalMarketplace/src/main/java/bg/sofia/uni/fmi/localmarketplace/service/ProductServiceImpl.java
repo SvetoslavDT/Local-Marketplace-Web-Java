@@ -73,9 +73,12 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional
-    public void setProductPicture(Long productId, MultipartFile picture) {
+    public void setProductPicture(Long productId, String username, MultipartFile picture) {
         Product product = productRepository.findById(productId)
             .orElseThrow(() -> new ProductDoesNotExistException("Product not found: " + productId));
+
+        User user = getUser(username);
+        checkIfTheMakerOfTheProductIsTheSame(product.getMaker(), user, productId);
 
         if (picture == null || picture.isEmpty()) {
             throw new IllegalArgumentException("Missing picture file");

@@ -1,3 +1,8 @@
-<app-top-bar></app-top-bar>
+<app-top-bar (homeClick)="onHomeClick()"></app-top-bar>
 
-<app-filter-sidebar></app-filter-sidebar>
+<div class="layout">
+  <app-filter-sidebar (search)="onSearch($event)"></app-filter-sidebar>
+  <main class="content">
+    <router-outlet></router-outlet>
+  </main>
+</div>

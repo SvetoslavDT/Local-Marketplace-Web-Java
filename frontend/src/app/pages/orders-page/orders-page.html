@@ -1,0 +1,79 @@
+<div class="page">
+  <a class="back-link" routerLink="/dashboard">← Back to dashboard</a>
+
+  <div class="header">
+    <h1>My Orders</h1>
+  </div>
+
+  @if (error()) {
+    <div class="state error">{{ error() }}</div>
+  }
+
+  @if (loading()) {
+    <div class="state">Loading orders...</div>
+  } @else if (!error() && orders().length === 0) {
+    <div class="state empty">You have no orders yet. <a routerLink="/dashboard">Start shopping</a>.</div>
+  } @else if (!error()) {
+    <div class="orders-list">
+      @for (order of orders(); track order.id) {
+        <div class="order-card">
+          <div class="order-header">
+            <span class="order-id">Order #{{ order.id }}</span>
+            <span class="order-status" [class]="'status-' + order.status.toLowerCase().replace('_', '-')">
+              {{ formatStatus(order.status) }}
+            </span>
+          </div>
+
+          <div class="order-meta">
+            <span class="meta-item">Currency: <strong>{{ order.currency }}</strong></span>
+            <span class="meta-item">Total: <strong>{{ order.currency }} {{ formatTotal(order.totalAmount) }}</strong></span>
+            <span class="meta-item">Items: <strong>{{ order.orderItems.length }}</strong></span>
+          </div>
+
+          <div class="order-items">
+            @for (item of order.orderItems; track item.id) {
+              <div class="order-item">
+                <span class="item-name">{{ item.product.name }}</span>
+                <span class="item-qty">× {{ item.quantity }}</span>
+                <span class="item-price">{{ order.currency }} {{ formatTotal(item.price) }}</span>
+              </div>
+            }
+          </div>
+
+          @if (order.status === 'PENDING_PAYMENT') {
+            <div class="pay-section">
+              @if (payError()[order.id]) {
+                <span class="pay-error">{{ payError()[order.id] }}</span>
+              }
+              <select
+                class="method-select"
+                [ngModel]="getMethod(order.id)"
+                (ngModelChange)="setMethod(order.id, $event)"
+              >
+                @for (m of paymentMethods; track m) {
+                  <option [value]="m">{{ formatMethod(m) }}</option>
+                }
+              </select>
+              <button
+                class="btn-pay"
+                type="button"
+                [disabled]="paying() === order.id"
+                (click)="onPay(order.id)"
+              >
+                {{ paying() === order.id ? 'Processing…' : 'Pay now' }}
+              </button>
+            </div>
+          }
+        </div>
+      }
+    </div>
+
+    @if (totalPages() > 1) {
+      <div class="pagination">
+        <button class="btn-page" [disabled]="page() === 0" (click)="prev()">← Prev</button>
+        <span class="page-info">{{ page() + 1 }} / {{ totalPages() }}</span>
+        <button class="btn-page" [disabled]="page() === totalPages() - 1" (click)="next()">Next →</button>
+      </div>
+    }
+  }
+</div>

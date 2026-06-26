@@ -1,0 +1,57 @@
+<div class="page">
+  <a class="back-link" routerLink="/dashboard">← Back to dashboard</a>
+
+  <div class="header">
+    <h1>My Cart</h1>
+    @if (cart() && cart()!.items.length > 0) {
+      <button class="btn-clear" type="button" (click)="onClear()">Clear cart</button>
+    }
+  </div>
+
+  @if (error()) {
+    <div class="state error">{{ error() }}</div>
+  }
+
+  @if (loading()) {
+    <div class="state">Loading cart...</div>
+  } @else if (!cart() || cart()!.items.length === 0) {
+    <div class="state empty">Your cart is empty.</div>
+  } @else {
+    <div class="cart-table">
+      <div class="table-head">
+        <span>Product</span>
+        <span>Unit price</span>
+        <span>Qty</span>
+        <span>Subtotal</span>
+        <span></span>
+      </div>
+
+      @for (item of cart()!.items; track trackById($index, item)) {
+        <div class="table-row">
+          <a class="product-name" [routerLink]="['/products', item.product.id]">
+            {{ item.product.name }}
+          </a>
+          <span class="cell">{{ formatPrice(item.product.price) }}</span>
+          <span class="cell qty-cell">
+            <input
+              class="qty-input"
+              type="number"
+              min="1"
+              [value]="item.quantity"
+              (change)="onQuantityChange(item.id, $event)"
+            />
+          </span>
+          <span class="cell subtotal">{{ formatPrice(item.subtotal) }}</span>
+          <span class="cell actions">
+            <button class="btn-remove" type="button" (click)="onRemove(item.id)">Remove</button>
+          </span>
+        </div>
+      }
+    </div>
+
+    <div class="summary">
+      <div class="total">Total: {{ formatPrice(cart()!.total) }}</div>
+      <button class="btn-checkout" type="button" (click)="onCheckout()">Checkout</button>
+    </div>
+  }
+</div>

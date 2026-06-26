@@ -4,14 +4,9 @@
   background: #ffffff;
   border-radius: 18px;
   padding: 14px;
-  display: grid;
-  grid-template-columns: 96px 1fr;
-  gap: 14px;
-  align-items: center;
-  cursor: pointer;
-  text-align: left;
-  text-decoration: none;
-  color: inherit;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
   box-shadow: 0 10px 24px rgba(30, 58, 95, 0.08);
   transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
@@ -19,6 +14,15 @@
 .entity-card:hover {
   transform: translateY(-2px);
   box-shadow: 0 14px 30px rgba(30, 58, 95, 0.12);
+}
+
+.card-link {
+  display: grid;
+  grid-template-columns: 96px 1fr;
+  gap: 14px;
+  align-items: center;
+  text-decoration: none;
+  color: inherit;
 }
 
 .image-box {
@@ -65,4 +69,21 @@
 .price {
   font-weight: 700;
   color: #102a43;
+}
+
+.btn-add-cart {
+  width: 100%;
+  background: #1e3a5f;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 9px 0;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.btn-add-cart:hover {
+  background: #2d5281;
 }
