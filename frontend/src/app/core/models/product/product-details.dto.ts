@@ -2,10 +2,10 @@ import { OutputProductMakerDto } from "./output-product-maker.dto";
 
 export interface ProductDetailsDto {
   id: number;
-  type: string;
+  productType: string;
   name: string;
   description: string;
-  imageUrl?: string | null;
+  productPicturePath?: string | null;
   price: number;
   quantity: number;
   maker: OutputProductMakerDto;

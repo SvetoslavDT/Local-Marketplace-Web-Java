@@ -1,4 +1,4 @@
-import {CraftFairInfo, PromotionalCampaignInfo, StorytellingInfo } from "./event-types.dto";
+import { DiscountType } from './event-types.dto';
 
 export interface EventDetailsDto {
   id: number;
@@ -6,11 +6,11 @@ export interface EventDetailsDto {
   description: string;
   type: string;
   ownerUsername: string;
-  startDate: string;
-  endDate: string;
+  startDate: string | null;
+  endDate: string | null;
   active: boolean;
-
-  storytellingInfo: StorytellingInfo | null;
-  craftFairInfo: CraftFairInfo | null;
-  promotionalCampaignInfo: PromotionalCampaignInfo | null;
+  content: string | null;
+  location: string | null;
+  discountType: DiscountType | null;
+  discountValue: number | null;
 }

@@ -8,10 +8,10 @@
   } @else if (product()) {
     <div class="hero">
       <div class="image-box">
-        @if (product()!.imageUrl) {
+        @if (product()!.productPicturePath) {
           <img
             class="product-image"
-            [src]="product()!.imageUrl!"
+            [src]="'/files?path=' + product()!.productPicturePath"
             [alt]="product()!.name"
           />
         } @else {
@@ -23,6 +23,7 @@
         <h1>{{ product()!.name }}</h1>
         <div class="hero-line">Price: {{ formatPrice(product()!.price) }}</div>
         <div class="hero-line">Quantity: {{ product()!.quantity }}</div>
+        <button class="btn-add-cart" type="button" (click)="onAddToCart()">Add to cart</button>
       </div>
     </div>
 
@@ -33,7 +34,7 @@
         @for (entry of entries(); track entry[0]) {
           <div class="row">
             <div class="key">{{ formatKey(entry[0]) }}</div>
-            <div class="value">{{ formatValue(entry[1]) }}</div>
+            <div class="value">{{ formatValue(entry[0], entry[1]) }}</div>
           </div>
         }
       </div>

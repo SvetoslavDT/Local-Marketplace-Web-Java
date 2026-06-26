@@ -1,37 +1,46 @@
-import { CommonModule } from '@angular/common';
-import { Component, input, output } from '@angular/core';
+import { Component, inject, output } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatMenuModule } from '@angular/material/menu';
+import { AuthService } from '../../../core/services/auth/auth-service';
+import { CartService } from '../../../core/services/cart/cart-service';
 
 @Component({
   selector: 'app-top-bar',
   standalone: true,
-  imports: [CommonModule, MatBadgeModule, MatButtonModule, MatIconModule, MatMenuModule, RouterLink],
+  imports: [MatBadgeModule, MatButtonModule, MatIconModule, MatMenuModule, RouterLink],
   templateUrl: './top-bar.html',
   styleUrl: './top-bar.css',
 })
 export class TopBar {
-  username = input<string>('');
-  isVendor = input<boolean>(false);
-  cartItemCount = input<number>(0);
+  private readonly auth = inject(AuthService);
+  private readonly cart = inject(CartService);
+  private readonly router = inject(Router);
 
-  ordersClick = output<void>();
-  cartClick = output<void>();
+  readonly isLoggedIn = this.auth.isLoggedIn;
+  readonly username = this.auth.currentUsername;
+  readonly isVendor = this.auth.isVendor;
+  readonly cartItemCount = this.cart.itemCount;
 
-  logoutClick = output<void>();
+  homeClick = output<void>();
 
-  onLogout(): void {
-    this.logoutClick().emit();
+  onHome(): void {
+    this.homeClick.emit();
   }
 
   onOrders(): void {
-    this.ordersClick.emit();
+    this.router.navigate(['/orders']);
   }
 
   onCart(): void {
-    this.cartClick.emit();
+    this.router.navigate(['/cart']);
+  }
+
+  onLogout(): void {
+    this.auth.logout();
+    this.router.navigate(['/dashboard']);
   }
 }

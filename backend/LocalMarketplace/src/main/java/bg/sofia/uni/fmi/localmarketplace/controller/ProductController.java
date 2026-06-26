@@ -25,6 +25,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -130,19 +131,22 @@ public class ProductController {
         @ApiResponse(responseCode = "404", description = "Product not found with the provided ID."),
         @ApiResponse(responseCode = "500", description = "Unexpected server error.")
     })
+    @PreAuthorize("hasRole('VENDOR')")
     @PatchMapping(value = "/{id}/picture", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> changeProductPicture(
         @PathVariable Long id,
-        @RequestParam("file") MultipartFile picture) {
+        @RequestParam("file") MultipartFile picture,
+        @Parameter(hidden = true) Principal principal) {
 
         if (!ValidationUtils.isJpgFile(picture)) {
             throw new InvalidFileFormatException("Only JPG files are allowed");
         }
 
-        productService.setProductPicture(id, picture);
+        productService.setProductPicture(id, principal.getName(), picture);
         return ResponseEntity.noContent().build();
     }
 
+    @PreAuthorize("hasRole('VENDOR')")
     @PostMapping
     @Operation(
         summary = "Create a new product",
@@ -161,6 +165,7 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.CREATED).body(createdProduct);
     }
 
+    @PreAuthorize("hasRole('VENDOR')")
     @PutMapping("/{id}")
     @Operation(summary = "Update an existing product",
         description = "Updates the product details. Only the authenticated user who originally created the product (the maker) is allowed to perform this operation.")
@@ -180,6 +185,7 @@ public class ProductController {
         return ResponseEntity.ok(updatedProduct);
     }
 
+    @PreAuthorize("hasRole('VENDOR')")
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete a product",
         description = "Removes a product from the marketplace. Only the authenticated maker of the product can delete it.")

@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import {environment} from '../../environments/environment';
 import { PageResponse } from "../../models/shared/page-response.dto";
 import { ProductDetailsDto } from "../../models/product/product-details.dto";
+import { CreateProductRequest, UpdateProductRequest } from '../../models/product/create-product-request.dto';
 
 @Injectable({ providedIn: 'root' })
 export class ProductService {
@@ -35,5 +36,23 @@ export class ProductService {
 
   getProductById(id: number): Observable<ProductDetailsDto> {
     return this.http.get<ProductDetailsDto>(`${this.baseUrl}/${id}`);
+  }
+
+  createProduct(dto: CreateProductRequest): Observable<ProductDetailsDto> {
+    return this.http.post<ProductDetailsDto>(this.baseUrl, dto);
+  }
+
+  updateProduct(id: number, dto: UpdateProductRequest): Observable<ProductDetailsDto> {
+    return this.http.put<ProductDetailsDto>(`${this.baseUrl}/${id}`, dto);
+  }
+
+  deleteProduct(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/${id}`);
+  }
+
+  uploadPicture(id: number, file: File): Observable<void> {
+    const form = new FormData();
+    form.append('file', file);
+    return this.http.patch<void>(`${this.baseUrl}/${id}/picture`, form);
   }
 }

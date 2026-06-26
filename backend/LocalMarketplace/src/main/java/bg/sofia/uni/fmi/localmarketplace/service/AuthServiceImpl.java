@@ -46,7 +46,8 @@ public class AuthServiceImpl implements AuthService {
             throw new InvalidCredentialsException("Invalid username or password.", e);
         }
         String token = jwtService.generateToken(dto.username());
-        return AuthTokenDTO.of(token, dto.username());
+        String userType = userService.getUser(dto.username()).userType().name();
+        return AuthTokenDTO.of(token, dto.username(), userType);
     }
 
     @Override

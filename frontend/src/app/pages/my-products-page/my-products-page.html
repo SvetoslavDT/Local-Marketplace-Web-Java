@@ -3,35 +3,104 @@
 
   <div class="header">
     <h1>My products</h1>
-    <p>{{ username() }}</p>
+    <button class="btn-create" type="button" (click)="openCreate()">+ Create product</button>
   </div>
+
+  @if (error()) {
+    <div class="state error">{{ error() }}</div>
+  }
+  @if (uploadError()) {
+    <div class="state error">{{ uploadError() }}</div>
+  }
 
   @if (loading()) {
     <div class="state">Loading...</div>
-  } @else if (error()) {
-    <div class="state error">{{ error() }}</div>
+  } @else if (products().length === 0 && !error()) {
+    <div class="state">You have no products yet.</div>
   } @else {
-    <div class="grid">
+    <div class="product-list">
       @for (p of products(); track p.id) {
-        <app-product-card [product]="p"></app-product-card>
+        <div class="product-row">
+          <div class="product-thumb">
+            @if (p.productPicturePath) {
+              <img [src]="'/files?path=' + p.productPicturePath" [alt]="p.name" />
+            } @else {
+              <div class="thumb-placeholder">No image</div>
+            }
+          </div>
+
+          <div class="product-info">
+            <a class="product-title" [routerLink]="['/products', p.id]">{{ p.name }}</a>
+            <span class="product-type">{{ formatType(p.productType) }}</span>
+            <span class="product-price">£{{ displayPrice(p.price) }}</span>
+            <span class="product-qty">Qty: {{ p.quantity }}</span>
+          </div>
+
+          <div class="product-actions">
+            <label class="btn-upload" [class.uploading]="uploadingId() === p.id">
+              {{ uploadingId() === p.id ? 'Uploading…' : 'Upload photo' }}
+              <input type="file" accept="image/jpeg" (change)="onPictureFile(p, $event)" hidden />
+            </label>
+            <button class="btn-edit" type="button" (click)="openEdit(p)">Edit</button>
+            <button class="btn-delete" type="button" (click)="deleteProduct(p)">Delete</button>
+          </div>
+        </div>
       }
     </div>
 
     <div class="pager">
-      <button mat-button type="button" (click)="prev()" [disabled]="page() === 0">
-        Previous
-      </button>
-
+      <button class="btn-page" type="button" (click)="prev()" [disabled]="page() === 0">Previous</button>
       <span>{{ page() + 1 }} / {{ totalPages() || 1 }}</span>
-
-      <button
-        mat-button
-        type="button"
-        (click)="next()"
-        [disabled]="page() >= totalPages() - 1"
-      >
-        Next
-      </button>
+      <button class="btn-page" type="button" (click)="next()" [disabled]="page() >= totalPages() - 1">Next</button>
     </div>
   }
 </div>
+
+@if (showForm()) {
+  <div class="overlay" (click)="closeForm()"></div>
+  <div class="modal">
+    <div class="modal-header">
+      <span>{{ editingId() != null ? 'Edit product' : 'Create product' }}</span>
+      <button class="modal-close" type="button" (click)="closeForm()">✕</button>
+    </div>
+
+    <div class="modal-body">
+      @if (formError()) {
+        <div class="form-error">{{ formError() }}</div>
+      }
+
+      <label class="field-label">Type</label>
+      <select class="field-select" [value]="form().productType"
+        (change)="updateField('productType', $any($event.target).value)">
+        <option value="">-- select type --</option>
+        @for (t of productTypes; track t) {
+          <option [value]="t">{{ formatType(t) }}</option>
+        }
+      </select>
+
+      <label class="field-label">Name</label>
+      <input class="field-input" type="text" [value]="form().name"
+        (input)="updateField('name', $any($event.target).value)" />
+
+      <label class="field-label">Description</label>
+      <textarea class="field-textarea" [value]="form().description"
+        (input)="updateField('description', $any($event.target).value)"></textarea>
+
+      <label class="field-label">Price (£)</label>
+      <input class="field-input" type="number" min="0" step="0.01" [value]="form().priceInput"
+        (input)="updateField('priceInput', $any($event.target).value)"
+        placeholder="e.g. 12.99" />
+
+      <label class="field-label">Quantity</label>
+      <input class="field-input" type="number" min="0" step="1" [value]="form().quantity"
+        (input)="updateField('quantity', $any($event.target).value)" />
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn-cancel" type="button" (click)="closeForm()">Cancel</button>
+      <button class="btn-save" type="button" [disabled]="formSaving()" (click)="save()">
+        {{ formSaving() ? 'Saving…' : 'Save' }}
+      </button>
+    </div>
+  </div>
+}

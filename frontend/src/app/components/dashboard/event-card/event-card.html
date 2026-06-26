@@ -3,8 +3,12 @@
     <div class="name">{{ event().title }}</div>
 
     <div class="meta">
-      <span>Start: {{ formatDate(event().startDate) }}</span>
-      <span>End: {{ formatDate(event().endDate) }}</span>
+      @if (event().startDate) {
+        <span>Start: {{ formatDate(event().startDate!) }}</span>
+      }
+      @if (event().endDate) {
+        <span>End: {{ formatDate(event().endDate!) }}</span>
+      }
     </div>
   </div>
 </a>

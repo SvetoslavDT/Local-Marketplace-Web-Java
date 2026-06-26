@@ -17,6 +17,20 @@
   gap: 12px;
 }
 
+.brand {
+  color: #fff;
+  font-size: 17px;
+  font-weight: 700;
+  text-decoration: none;
+  letter-spacing: 0.3px;
+  padding-right: 8px;
+  border-right: 1px solid rgba(255,255,255,0.25);
+}
+
+.brand:hover {
+  color: #c8dbf0;
+}
+
 .username-btn {
   color: white;
   font-size: 18px;
@@ -28,7 +42,28 @@
   font-size: 12px;
 }
 
-.post-product-btn,
 .orders-btn {
   color: white;
+}
+
+.nav-link {
+  color: #fff;
+  text-decoration: none;
+  font-size: 15px;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: 8px;
+  transition: background 0.15s;
+}
+
+.nav-link:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.nav-link--register {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.nav-link--register:hover {
+  background: rgba(255, 255, 255, 0.25);
 }

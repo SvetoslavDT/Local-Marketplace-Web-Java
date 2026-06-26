@@ -22,10 +22,10 @@ public interface EventRepository extends JpaRepository<Event, Long> {
 SELECT e FROM Event e
 WHERE
 (:types IS NULL OR e.type IN :types)
-AND (:active IS NULL OR e.active = :active)
 AND (
-    :upcoming IS NULL
-    OR (:upcoming = true AND e.startDate >= CURRENT_TIMESTAMP)
+    (:active IS NULL AND :upcoming IS NULL)
+    OR (:active IS NOT NULL AND e.active = :active)
+    OR (:upcoming IS NOT NULL AND :upcoming = true AND e.startDate >= CURRENT_TIMESTAMP)
 )
 """)
     Page<Event> findEventsWithFilters(

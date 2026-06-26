@@ -1,0 +1,158 @@
+.page {
+  min-height: 100vh;
+  background: #edf3f8;
+  padding: 24px;
+  box-sizing: border-box;
+}
+
+.back-link {
+  display: inline-block;
+  margin-bottom: 18px;
+  color: #1e3a5f;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.header {
+  margin-bottom: 20px;
+}
+
+.header h1 {
+  margin: 0;
+  color: #1e3a5f;
+}
+
+.state {
+  background: #fff;
+  border-radius: 18px;
+  padding: 18px;
+  color: #1e3a5f;
+  margin-bottom: 12px;
+}
+
+.state.error {
+  color: #b00020;
+  background: #fde8e8;
+}
+
+.state.empty {
+  text-align: center;
+  color: #486581;
+}
+
+.state.empty a {
+  color: #1e3a5f;
+  font-weight: 600;
+}
+
+.checkout-layout {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 24px;
+  align-items: start;
+}
+
+@media (max-width: 768px) {
+  .checkout-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+.card {
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 4px 12px rgba(30, 58, 95, 0.07);
+  padding: 24px;
+}
+
+.card h2 {
+  margin: 0 0 16px;
+  color: #1e3a5f;
+  font-size: 18px;
+}
+
+.summary-table {
+  margin-bottom: 16px;
+}
+
+.summary-head,
+.summary-row {
+  display: grid;
+  grid-template-columns: 1fr 60px 120px;
+  gap: 8px;
+  padding: 8px 0;
+}
+
+.summary-head {
+  border-bottom: 2px solid #e0eaf5;
+  font-weight: 700;
+  font-size: 13px;
+  color: #486581;
+  text-transform: uppercase;
+}
+
+.summary-row {
+  border-bottom: 1px solid #f0f4f8;
+  font-size: 14px;
+  color: #1e3a5f;
+}
+
+.summary-row:last-child {
+  border-bottom: none;
+}
+
+.product-name {
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cell {
+  color: #334e68;
+}
+
+.subtotal {
+  font-weight: 700;
+  color: #1b7a3e;
+}
+
+.cart-total {
+  text-align: right;
+  font-size: 18px;
+  color: #1e3a5f;
+  padding-top: 8px;
+  border-top: 2px solid #e0eaf5;
+}
+
+.currency-badge {
+  font-size: 15px;
+  color: #486581;
+  margin-bottom: 24px;
+}
+
+.currency-badge strong {
+  color: #1e3a5f;
+}
+
+.btn-confirm {
+  width: 100%;
+  background: #1e3a5f;
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  padding: 14px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  letter-spacing: 0.3px;
+}
+
+.btn-confirm:hover:not(:disabled) {
+  background: #2d5281;
+}
+
+.btn-confirm:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

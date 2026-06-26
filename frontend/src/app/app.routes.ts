@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { authGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'dashboard' },
@@ -19,17 +20,54 @@ export const routes: Routes = [
   },
   {
     path: 'settings',
+    canActivate: [authGuard],
     loadComponent: () =>
       import('./pages/settings-page/settings-page').then(m => m.SettingsPage),
   },
   {
     path: 'settings/:username',
+    canActivate: [authGuard],
     loadComponent: () =>
       import('./pages/settings-page/settings-page').then(m => m.SettingsPage),
   },
   {
     path: 'my-products/:username',
+    canActivate: [authGuard],
     loadComponent: () =>
       import('./pages/my-products-page/my-products-page').then(m => m.MyProductsPage),
+  },
+  {
+    path: 'my-events',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./pages/my-events-page/my-events-page').then(m => m.MyEventsPage),
+  },
+  {
+    path: 'login',
+    loadComponent: () =>
+      import('./pages/login-page/login-page').then(m => m.LoginPage),
+  },
+  {
+    path: 'register',
+    loadComponent: () =>
+      import('./pages/register-page/register-page').then(m => m.RegisterPage),
+  },
+  {
+    path: 'cart',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./pages/cart-page/cart-page').then(m => m.CartPage),
+  },
+  {
+    path: 'checkout',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./pages/checkout-page/checkout-page').then(m => m.CheckoutPage),
+  },
+  {
+    path: 'orders',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./pages/orders-page/orders-page').then(m => m.OrdersPage),
   },
 ];

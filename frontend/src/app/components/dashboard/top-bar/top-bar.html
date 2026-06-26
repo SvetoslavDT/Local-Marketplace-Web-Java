@@ -1,36 +1,43 @@
 <div class="top-bar">
   <div class="left-side">
-    <div class="username-wrap">
-      <button mat-button [matMenuTriggerFor]="userMenu" class="username-btn">
-        <span>{{ username() }}</span>
-        <mat-icon>expand_more</mat-icon>
-      </button>
+    <a class="brand" routerLink="/dashboard" (click)="onHome()">Local Marketplace</a>
 
-      <mat-menu #userMenu="matMenu">
-        <button mat-menu-item routerLink="/settings">Settings</button>
-        <button mat-menu-item (click)="onLogout()">Logout</button>
-      </mat-menu>
-    </div>
+    @if (isLoggedIn()) {
+      <div class="username-wrap">
+        <button mat-button [matMenuTriggerFor]="userMenu" class="username-btn">
+          <span>{{ username() }}</span>
+          <mat-icon>expand_more</mat-icon>
+        </button>
+
+        <mat-menu #userMenu="matMenu">
+          <button mat-menu-item routerLink="/my-events">Events</button>
+          @if (isVendor()) {
+            <button mat-menu-item [routerLink]="['/my-products', username()]">My Products</button>
+          }
+          <button mat-menu-item [routerLink]="['/settings', username()]">Settings</button>
+          <button mat-menu-item (click)="onLogout()">Logout</button>
+        </mat-menu>
+      </div>
+    }
   </div>
 
   <div class="right-side">
-    <button
-      mat-button
-      class="orders-btn"
-      (click)="onOrders()"
-    >
-      Orders
-    </button>
+    @if (isLoggedIn()) {
+      <button mat-button class="orders-btn" (click)="onOrders()">Orders</button>
 
-    <button
-      mat-icon-button
-      (click)="onCart()"
-      [matBadge]="cartItemCount()"
-      [matBadgeHidden]="cartItemCount() === 0"
-      matBadgeColor="warn"
-      matBadgePosition="above after"
-    >
-      <mat-icon>shopping_cart</mat-icon>
-    </button>
+      <button
+        mat-icon-button
+        (click)="onCart()"
+        [matBadge]="cartItemCount()"
+        [matBadgeHidden]="cartItemCount() === 0"
+        matBadgeColor="warn"
+        matBadgePosition="above after"
+      >
+        <mat-icon>shopping_cart</mat-icon>
+      </button>
+    } @else {
+      <a class="nav-link" routerLink="/login">Login</a>
+      <a class="nav-link nav-link--register" routerLink="/register">Register</a>
+    }
   </div>
 </div>

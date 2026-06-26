@@ -3,6 +3,7 @@ import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { ProductDetailsDto } from "../../core/models/product/product-details.dto";
 import { ProductService } from '../../core/services/product/product-service';
+import { CartService } from '../../core/services/cart/cart-service';
 
 @Component({
   selector: 'app-product-details-page',
@@ -14,6 +15,7 @@ import { ProductService } from '../../core/services/product/product-service';
 export class ProductDetailsPage implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly productService = inject(ProductService);
+  private readonly cartService = inject(CartService);
 
   product = signal<ProductDetailsDto | null>(null);
   loading = signal(true);
@@ -53,16 +55,25 @@ export class ProductDetailsPage implements OnInit {
       .replace(/^./, c => c.toUpperCase());
   }
 
-  formatValue(value: unknown): string {
+  formatValue(key: string, value: unknown): string {
+    if (key === 'price' && typeof value === 'number') return this.formatPrice(value);
     if (Array.isArray(value)) return value.join(', ');
     if (typeof value === 'object') return JSON.stringify(value);
     return String(value);
   }
 
+  onAddToCart(): void {
+    const p = this.product();
+    if (!p) return;
+    this.cartService.addItem(p.id, 1).subscribe({ error: () => {} });
+  }
+
   formatPrice(value: number): string {
     return new Intl.NumberFormat('bg-BG', {
+      style: 'currency',
+      currency: 'EUR',
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
-    }).format(value);
+    }).format(value / 100);
   }
 }

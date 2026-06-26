@@ -12,9 +12,12 @@ public record AuthTokenDTO(
     String username,
 
     @Schema(description = "Token type, always 'Bearer'.", requiredMode = Schema.RequiredMode.REQUIRED)
-    String tokenType
+    String tokenType,
+
+    @Schema(description = "Role of the authenticated user (CUSTOMER, VENDOR, ADMIN).", requiredMode = Schema.RequiredMode.REQUIRED)
+    String userType
 ) {
-    public static AuthTokenDTO of(String token, String username) {
-        return new AuthTokenDTO(token, username, "Bearer");
+    public static AuthTokenDTO of(String token, String username, String userType) {
+        return new AuthTokenDTO(token, username, "Bearer", userType);
     }
 }

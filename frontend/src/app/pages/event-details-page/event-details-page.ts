@@ -19,10 +19,34 @@ export class EventDetailsPage implements OnInit {
   loading = signal(true);
   error = signal<string | null>(null);
 
-  entries = computed(() => {
-    const value = this.event();
-    if (!value) return [];
-    return Object.entries(value).filter(([, v]) => v !== null && v !== undefined && v !== '');
+  readonly TYPE_CRAFT_FAIRS = 'CRAFT_FAIRS';
+  readonly TYPE_PROMOTIONAL_CAMPAIGNS = 'PROMOTIONAL_CAMPAIGNS';
+  readonly TYPE_STORYTELLING_FEATURES = 'STORYTELLING_FEATURES';
+
+  coreEntries = computed(() => {
+    const e = this.event();
+    if (!e) return [];
+    const CORE_KEYS: (keyof EventDetailsDto)[] = ['id', 'title', 'description', 'type', 'ownerUsername', 'active'];
+    return CORE_KEYS.map(k => [k, e[k]] as [string, unknown]);
+  });
+
+  typeEntries = computed(() => {
+    const e = this.event();
+    if (!e) return [];
+    const entries: [string, unknown][] = [];
+    if (e.type === this.TYPE_CRAFT_FAIRS) {
+      if (e.location) entries.push(['location', e.location]);
+      if (e.startDate) entries.push(['startDate', e.startDate]);
+      if (e.endDate) entries.push(['endDate', e.endDate]);
+    } else if (e.type === this.TYPE_PROMOTIONAL_CAMPAIGNS) {
+      if (e.discountType) entries.push(['discountType', e.discountType]);
+      if (e.discountValue != null) entries.push(['discountValue', e.discountValue]);
+      if (e.startDate) entries.push(['startDate', e.startDate]);
+      if (e.endDate) entries.push(['endDate', e.endDate]);
+    } else if (e.type === this.TYPE_STORYTELLING_FEATURES) {
+      if (e.content) entries.push(['content', e.content]);
+    }
+    return entries;
   });
 
   ngOnInit(): void {
@@ -53,9 +77,15 @@ export class EventDetailsPage implements OnInit {
       .replace(/^./, c => c.toUpperCase());
   }
 
-  formatValue(value: unknown): string {
+  formatValue(key: string, value: unknown): string {
+    if (key === 'startDate' || key === 'endDate') {
+      return this.formatDate(String(value));
+    }
+    if (key === 'discountValue' && typeof value === 'number') {
+      return `${(value / 100).toFixed(2)}`;
+    }
     if (Array.isArray(value)) return value.join(', ');
-    if (typeof value === 'object') return JSON.stringify(value);
+    if (typeof value === 'boolean') return value ? 'Yes' : 'No';
     return String(value);
   }
 
