@@ -18,8 +18,8 @@
 }
 
 .brand {
-  color: #fff;
-  font-size: 17px;
+  color: #00E5FF;
+  font-size: 23px;
   font-weight: 700;
   text-decoration: none;
   letter-spacing: 0.3px;
@@ -43,7 +43,7 @@
 }
 
 .orders-btn {
-  color: white;
+  font-size: 18px;
 }
 
 .nav-link {
